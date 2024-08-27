@@ -16,3 +16,10 @@
     }
 }
 
+/* CSS in a global stylesheet or styled component */
+@media (max-width: 768px) {
+    .desktop-only {
+      display: none;
+    }
+  }
+  

@@ -9,7 +9,8 @@ export default function ExpertForm() {
     name: '',
     email: '',
     jobPosition: '',
-    interviewTime: ''
+    interviewTime: '',
+    candidateLink: '',
   });
 
   const handleOpen = () => setIsOpen(true);
