@@ -27,7 +27,6 @@ export default function RootLayout({ children }) {
         <NextUIProvider>
           <Header />
           {children}
-          <Banner />
         </NextUIProvider>
         </div>
       </body>
