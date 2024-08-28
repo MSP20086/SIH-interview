@@ -41,13 +41,13 @@ export default function ExpertForm() {
       const result = await response.json();
       console.log('Data posted successfully:', result);
 
-      setId(result.id);
+      setId(toString(result.interview._id));
       setFormData((prevData) => ({
         ...prevData,
-        InterviewLink: `http://localhost:3000/can/${result.id}`,  
+        InterviewLink: `http://localhost:3000/can/${result.interview._id}`,  
       }));
-
-      return result.id;
+      console.log(result.interview._id);
+      return result.interview._id;
 
     } catch (error) {
       console.error('Failed to post data:', error);
@@ -57,11 +57,11 @@ export default function ExpertForm() {
   const sendEmail = async () => {
     try {
       await postData(); 
-      while(!id){
-        await new Promise((resolve) => setTimeout(resolve), 1000);
+      if(!id){
         setIsLoading(true);
       }
       if(id){
+        setIsLoading(false);
         emailjs.send(
           'service_u84bp1n', 
           'template_0lrcsxn',
@@ -74,6 +74,7 @@ export default function ExpertForm() {
         }, (err) => {
           console.error('FAILED...', err);
         });
+        
       }
       
     } catch (error) {

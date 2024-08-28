@@ -6,6 +6,7 @@ import Logo from './logo'
 import Dropdown from '@/components/utils/dropdown'
 import MobileMenu from './mobile-menu'
 import { useUser } from '@/app/context/user'
+import { Button, Avatar, AvatarIcon } from '@nextui-org/react'
 
 export default function Header() {
   const [top, setTop] = useState(true)
@@ -35,14 +36,24 @@ export default function Header() {
             <ul className="flex grow justify-end flex-wrap items-center">
               {user ? (
                 <>
-                  <li>
-                    <button
+                  <div className="flex flex-row gap-1">
+                    <Avatar 
+                      icon={<AvatarIcon />}
+                      size="md"
+                      classNames={{
+                        base: "bg-gradient-to-br from-[#4FC3F7] to-[#0288D1]", // Medium blue gradient
+                        icon: "text-black/80",
+                      }}
+                      
+                    />
+                    <Button
                       onClick={logout}
-                      className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out"
+                      className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out bg-transparent hover:bg-gray-100" 
                     >
                       Log out
-                    </button>
-                  </li>
+
+                    </Button>
+                  </div>
                 </>
               ) : (
                 <>
