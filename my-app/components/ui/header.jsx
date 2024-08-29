@@ -20,7 +20,7 @@ export default function Header() {
     scrollHandler()
     window.addEventListener('scroll', scrollHandler)
     return () => window.removeEventListener('scroll', scrollHandler)
-  }, [top])
+  }, [top, user])
 
   return (
     <header className={`fixed w-full z-30 md:bg-opacity-90 transition bg-white duration-300 ease-in-out ${!top ? 'backdrop-blur-sm shadow-lg' : ''}`}>
@@ -37,18 +37,18 @@ export default function Header() {
               {user ? (
                 <>
                   <div className="flex flex-row gap-1">
-                    <Avatar 
+                    <Avatar
                       icon={<AvatarIcon />}
                       size="md"
                       classNames={{
                         base: "bg-gradient-to-br from-[#4FC3F7] to-[#0288D1]", // Medium blue gradient
                         icon: "text-black/80",
                       }}
-                      
+
                     />
                     <Button
                       onClick={logout}
-                      className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out bg-transparent hover:bg-gray-100" 
+                      className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out bg-transparent hover:bg-gray-100"
                     >
                       Log out
 
