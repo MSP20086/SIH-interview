@@ -12,6 +12,7 @@
     "@emailjs/browser": "^4.4.1",
     "@headlessui/react": "^1.7.18",
     "@nextui-org/react": "^2.4.6",
+    "@pinata/sdk": "^2.1.0",
     "aos": "^2.3.4",
     "axios": "^1.7.5",
     "bcrypt": "^5.1.1",
