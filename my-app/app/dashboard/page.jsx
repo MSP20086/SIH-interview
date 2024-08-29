@@ -4,10 +4,14 @@ import React from 'react'
 import { Tabs, Tab } from '@nextui-org/react'
 import PastTableComponent from '@/components/Table/PastTable'
 import FutureTableComponent from '@/components/Table/FutureTable'
+import { useSearchParams } from 'next/navigation'
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = React.useState('scheduledInterview')
+  const SearchParams = useSearchParams()
 
+  const userid = SearchParams.get('userid');
+  console.log(`userid: ${userid}`);
   return (
     <div className='flex flex-col items-center justify-center min-h-screen space-y-4 p-4 pt-24 '>
       <Tabs

@@ -35,6 +35,14 @@ export default function Header() {
             <ul className="flex grow justify-end flex-wrap items-center">
               {user ? (
                 <div className="flex flex-row gap-1">
+                  <Button
+                    href={`/dashboard/?userid=${user._id}`}
+                    as={Link}
+                    color="transparent"
+                    className="font-medium text-gray-600 hover:bg-slate-300 px-5 py-3 flex items-center transition duration-150 ease-in-out"
+                  >
+                    Dashboard
+                  </Button>
                   <Avatar
                     icon={<AvatarIcon />}
                     size="md"
@@ -44,7 +52,7 @@ export default function Header() {
                     }}
                   />
                   <Button
-                    onClick={logout} // Call the logout function
+                    onClick={logout} 
                     className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out bg-transparent hover:bg-gray-100"
                   >
                     Log out
