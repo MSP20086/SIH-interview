@@ -17,12 +17,12 @@ export default function ExpertForm() {
     InterviewLink: '',
   });
 
-  const handleOpen = () => setIsOpen(true);
-  const handleClose = () => setIsOpen(false);
+  const handleOpen = () => setIsOpen(true)
+  const handleClose = () => setIsOpen(false)
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
 
   const postData = async () => {
     try {
@@ -88,48 +88,57 @@ export default function ExpertForm() {
 
   return (
     <>
-      <Button onPress={handleOpen} color="primary">Open Modal</Button>
-      <Modal 
-        backdrop="opaque" 
-        size="lg"
-        isOpen={isOpen} 
+      <Button
+        onPress={handleOpen}
+        radius='full'
+        className='bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg'
+      >
+        Schedule New Interview
+      </Button>
+      <Modal
+        backdrop='opaque'
+        size='lg'
+        isOpen={isOpen}
         onOpenChange={setIsOpen}
         placement="center"
         classNames={{
-          backdrop: "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20"
+          backdrop:
+            'bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20',
         }}
       >
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Interview Details</ModalHeader>
+              <ModalHeader className='flex flex-col gap-1'>
+                Interview Details
+              </ModalHeader>
               <ModalBody>
                 <Input
                   autoFocus
-                  label="Name"
-                  name="name"
+                  label='Name'
+                  name='name'
                   placeholder="Enter candidate's name"
-                  variant="bordered"
+                  variant='bordered'
                   onChange={handleChange}
                   isRequired
                 />
                 
                 <Input
-                  label="Email ID"
-                  name="email"
+                  label='Email ID'
+                  name='email'
                   placeholder="Enter candidate's email"
-                  type="email"
-                  variant="bordered"
+                  type='email'
+                  variant='bordered'
                   onChange={handleChange}
                   isRequired
                   isClearable
                 />
                 
                 <Input
-                  label="Job Position"
-                  name="jobPosition"
-                  placeholder="Enter job position"
-                  variant="bordered"
+                  label='Job Position'
+                  name='role'
+                  placeholder='Enter job position'
+                  variant='bordered'
                   onChange={handleChange}
                   isRequired
                 />
@@ -177,5 +186,5 @@ export default function ExpertForm() {
         </ModalContent>
       </Modal>
     </>
-  );
+  )
 }

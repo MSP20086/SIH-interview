@@ -13,6 +13,7 @@
     "@headlessui/react": "^1.7.18",
     "@nextui-org/react": "^2.4.6",
     "aos": "^2.3.4",
+    "date-fns": "^3.6.0",
     "axios": "^1.7.5",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
