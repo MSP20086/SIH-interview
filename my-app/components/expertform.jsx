@@ -136,7 +136,7 @@ export default function ExpertForm() {
                 
                 <Input
                   label='Job Position'
-                  name='role'
+                  name='jobPosition'
                   placeholder='Enter job position'
                   variant='bordered'
                   onChange={handleChange}

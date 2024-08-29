@@ -4,9 +4,9 @@ export async function POST(req) {
     try {
         const { name, email, jobPosition, interviewTime, HostLink, candidateLink } = await req.json();
 
-        if (!name || !email || !jobPosition || !interviewTime || !HostLink || !candidateLink) {
-            return new Response(JSON.stringify({ message: 'All fields are required' }), { status: 400 });
-        }
+        // if (!name || !email || !jobPosition || !interviewTime || !HostLink || !candidateLink) {
+        //     return new Response(JSON.stringify({ message: 'All fields are required' }), { status: 400 });
+        // }
 
         const { db } = await connectToDatabase();
 
