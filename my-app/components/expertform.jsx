@@ -1,12 +1,12 @@
 'use client'
 import React, { useState } from 'react';
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from "@nextui-org/react"; 
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input } from "@nextui-org/react";
 import emailjs from '@emailjs/browser';
 
 export default function ExpertForm() {
   const [isOpen, setIsOpen] = useState(false);
   const [id, setId] = useState('');
-  const [isloading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,12 +17,12 @@ export default function ExpertForm() {
     InterviewLink: '',
   });
 
-  const handleOpen = () => setIsOpen(true)
-  const handleClose = () => setIsOpen(false)
+  const handleOpen = () => setIsOpen(true);
+  const handleClose = () => setIsOpen(false);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const postData = async () => {
     try {
@@ -33,20 +33,19 @@ export default function ExpertForm() {
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
-  
+
       const result = await response.json();
       console.log('Data posted successfully:', result);
 
-      setId(toString(result.interview._id));
+      setId(result.interview._id.toString());
       setFormData((prevData) => ({
         ...prevData,
-        InterviewLink: `http://localhost:3000/can/${result.interview._id}`,  
+        InterviewLink: `http://localhost:3000/can/${result.interview._id}`,
       }));
-      console.log(result.interview._id);
       return result.interview._id;
 
     } catch (error) {
@@ -56,34 +55,33 @@ export default function ExpertForm() {
 
   const sendEmail = async () => {
     try {
-      await postData(); 
-      if(!id){
-        setIsLoading(true);
-      }
-      if(id){
-        setIsLoading(false);
+      setIsLoading(true);
+      const interviewId = await postData();
+
+      if (interviewId) {
         emailjs.send(
-          'service_u84bp1n', 
+          'service_u84bp1n',
           'template_0lrcsxn',
-          { ...formData, InterviewLink: `http://localhost:3000/can/${id}` },  
+          { ...formData, InterviewLink: `http://localhost:3000/can/${interviewId}` },
           'ZIHQMfKI0iwengpp8'
         )
-        .then((response) => {
-          console.log('SUCCESS!', response.status, response.text);
-          handleClose();
-        }, (err) => {
-          console.error('FAILED...', err);
-        });
-        
+          .then((response) => {
+            console.log('SUCCESS!', response.status, response.text);
+            setIsLoading(false);
+            handleClose();
+          }, (err) => {
+            console.error('FAILED...', err);
+            setIsLoading(false);
+          });
       }
-      
     } catch (error) {
       console.error('Error sending email:', error);
+      setIsLoading(false);
     }
   };
 
   const handleroute = () => {
-    window.open('https://nexusmeetapp.vercel.app/', '_blank'); 
+    window.open('https://nexusmeetapp.vercel.app/', '_blank');
   };
 
   return (
@@ -122,7 +120,7 @@ export default function ExpertForm() {
                   onChange={handleChange}
                   isRequired
                 />
-                
+
                 <Input
                   label='Email ID'
                   name='email'
@@ -133,16 +131,17 @@ export default function ExpertForm() {
                   isRequired
                   isClearable
                 />
-                
+
                 <Input
                   label='Job Position'
+
                   name='jobPosition'
                   placeholder='Enter job position'
                   variant='bordered'
                   onChange={handleChange}
                   isRequired
                 />
-                
+
                 <Input
                   label="Interview Time"
                   name="interviewTime"
@@ -153,7 +152,7 @@ export default function ExpertForm() {
                   isRequired
                 />
                 <Button color="primary" onPress={handleroute} variant="flat">
-                  Click here to schedule a meeting 
+                  Click here to schedule a meeting
                 </Button>
                 <Input
                   label="Host Link"
@@ -176,8 +175,8 @@ export default function ExpertForm() {
                 <Button color="danger" variant="flat" onPress={onClose}>
                   Close
                 </Button>
-                
-                <Button color="primary" onPress={sendEmail} isLoading={isloading}>
+
+                <Button color="primary" onPress={sendEmail} isLoading={isLoading}>
                   Create & Share
                 </Button>
               </ModalFooter>
@@ -186,5 +185,5 @@ export default function ExpertForm() {
         </ModalContent>
       </Modal>
     </>
-  )
+  );
 }
