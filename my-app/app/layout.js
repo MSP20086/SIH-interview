@@ -1,13 +1,12 @@
-"use client"
+"use client";
 
 import "./css/style.css";
-
 import { Inter } from "next/font/google";
-import { UserProvider, useUser } from "@/app/context/user"
+import { UserProvider, useUser } from "@/app/context/user";
 import Header from "@/components/ui/header";
 import Banner from "@/components/banner";
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,14 +35,17 @@ export default function RootLayout({ children }) {
 }
 
 function ContentWrapper({ children }) {
-  // const { user } = useUser();
-  // const router = useRouter();
+  const { user } = useUser();
+  const router = useRouter();
+  console.log(user);
 
   // useEffect(() => {
-  //   if (!user && router.pathname !== '/') {
+  //   // Redirect to sign-in page if the user is not logged in
+  //   if (!user && router.pathname !== '/signin') {
   //     router.push('/signin');
   //   }
   // }, [user, router]);
 
   return <>{children}</>;
 }
+

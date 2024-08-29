@@ -1,26 +1,25 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import Logo from './logo'
-import Dropdown from '@/components/utils/dropdown'
-import MobileMenu from './mobile-menu'
-import { useUser } from '@/app/context/user'
-import { Button, Avatar, AvatarIcon } from '@nextui-org/react'
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Logo from './logo';
+import MobileMenu from './mobile-menu';
+import { useUser } from '@/app/context/user';
+import { Button, Avatar, AvatarIcon } from '@nextui-org/react';
 
 export default function Header() {
-  const [top, setTop] = useState(true)
-  const { user, logout } = useUser()
+  const [top, setTop] = useState(true);
+  const { user, logout } = useUser();
 
   const scrollHandler = () => {
-    window.pageYOffset > 10 ? setTop(false) : setTop(true)
-  }
+    window.pageYOffset > 10 ? setTop(false) : setTop(true);
+  };
 
   useEffect(() => {
-    scrollHandler()
-    window.addEventListener('scroll', scrollHandler)
-    return () => window.removeEventListener('scroll', scrollHandler)
-  }, [top, user])
+    scrollHandler();
+    window.addEventListener('scroll', scrollHandler);
+    return () => window.removeEventListener('scroll', scrollHandler);
+  }, [top, user]);
 
   return (
     <header className={`fixed w-full z-30 md:bg-opacity-90 transition bg-white duration-300 ease-in-out ${!top ? 'backdrop-blur-sm shadow-lg' : ''}`}>
@@ -35,30 +34,28 @@ export default function Header() {
           <nav className="hidden md:flex md:grow">
             <ul className="flex grow justify-end flex-wrap items-center">
               {user ? (
-                <>
-                  <div className="flex flex-row gap-1">
-                    <Avatar
-                      icon={<AvatarIcon />}
-                      size="md"
-                      classNames={{
-                        base: "bg-gradient-to-br from-[#4FC3F7] to-[#0288D1]", // Medium blue gradient
-                        icon: "text-black/80",
-                      }}
-
-                    />
-                    <Button
-                      onClick={logout}
-                      className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out bg-transparent hover:bg-gray-100"
-                    >
-                      Log out
-
-                    </Button>
-                  </div>
-                </>
+                <div className="flex flex-row gap-1">
+                  <Avatar
+                    icon={<AvatarIcon />}
+                    size="md"
+                    classNames={{
+                      base: "bg-gradient-to-br from-[#4FC3F7] to-[#0288D1]",
+                      icon: "text-black/80",
+                    }}
+                  />
+                  <Button
+                    onClick={logout} // Call the logout function
+                    className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out bg-transparent hover:bg-gray-100"
+                  >
+                    Log out
+                  </Button>
+                </div>
               ) : (
                 <>
                   <li>
-                    <Link href="/signin" className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">Sign in</Link>
+                    <Link href="/signin" className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">
+                      Sign in
+                    </Link>
                   </li>
                   <li>
                     <Link href="/signup" className="btn-sm text-gray-200 bg-gray-900 hover:bg-gray-800 ml-3">
@@ -77,5 +74,5 @@ export default function Header() {
         </div>
       </div>
     </header>
-  )
+  );
 }
