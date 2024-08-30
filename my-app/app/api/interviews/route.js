@@ -2,7 +2,7 @@ import { connectToDatabase } from '@/lib/mongodb';
 
 export async function POST(req) {
     try {
-        const { name, email, jobPosition, interviewTime, HostLink, candidateLink } = await req.json();
+        const { name, email, jobPosition, interviewTime, HostLink, candidateLink, skillSets, resumeLink } = await req.json();
 
         if (!name || !email || !jobPosition || !interviewTime || !HostLink || !candidateLink) {
             return new Response(JSON.stringify({ message: 'All fields are required' }), { status: 400 });
@@ -17,6 +17,8 @@ export async function POST(req) {
             interviewTime,
             HostLink,
             candidateLink,
+            skillSets,
+            resumeLink,
             createdAt: new Date(),
         });
 

@@ -1,8 +1,11 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 export default function Page() {
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
+    id: '',
     name: '',
     email: '',
     skillSets: '',
@@ -11,6 +14,15 @@ export default function Page() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [responseMessage, setResponseMessage] = useState('');
+
+  useEffect(() => {
+    const idFromURL = searchParams.get('id');  // Get the 'id' parameter from the URL
+    if (idFromURL) {
+      setFormData((prevFormData) => ({ ...prevFormData, id: idFromURL }));
+    }
+  }, [searchParams]);
+
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,7 +43,7 @@ export default function Page() {
     e.preventDefault();
     setIsSubmitting(true);
     setResponseMessage('');
-
+    console.log(formData);
     const formDataToSend = new FormData();
     formDataToSend.append('name', formData.name);
     formDataToSend.append('email', formData.email);
@@ -42,7 +54,7 @@ export default function Page() {
 
     try {
       const response = await fetch('/api/candidate', {
-        method: 'POST',
+        method: 'PATCH',
         body: formDataToSend,
       });
       const result = await response.json();

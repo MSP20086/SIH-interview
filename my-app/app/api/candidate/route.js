@@ -7,7 +7,7 @@ export const config = {
     }
 };
 
-export async function POST(request) {
+export async function PATCH(request) {
     try {
         const data = await request.formData();
         const file = data.get('resume');
@@ -51,13 +51,22 @@ export async function POST(request) {
         const { db } = await connectToDatabase();
 
         // Store data in MongoDB
-        const { name, email, skillSets } = Object.fromEntries(data.entries());
-        await db.collection('interviews').insertOne({
-            name,
-            email,
-            skillSets,
-            resumeLink,
-        });
+        const { id, name, email, skillSets } = Object.fromEntries(data.entries());
+        const interview = await db.collection('interviews').findOne({ _id: ObjectId(id) });
+
+        if (!interview) {
+            return NextResponse.json({ error: 'Interview not found' }, { status: 404 });
+        }
+
+        interview.name = name;
+        interview.email = email;
+        interview.skillSets = skillSets;
+        interview.resumeLink = resumeLink;
+
+        await db.collection('interviews').updateOne(
+            { _id: ObjectId(id) },
+            { $set: { name, email, skillSets, resumeLink } }
+        );
 
         return NextResponse.json({ message: 'Submission successful', resumeLink }, { status: 200 });
     } catch (e) {

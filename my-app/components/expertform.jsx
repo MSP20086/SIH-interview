@@ -15,6 +15,8 @@ export default function ExpertForm() {
     HostLink: '',
     candidateLink: '',
     InterviewLink: '',
+    skillSets: '',
+    resumeLink: '',
   });
 
   const handleOpen = () => setIsOpen(true);
@@ -44,7 +46,7 @@ export default function ExpertForm() {
       setId(result.interview._id.toString());
       setFormData((prevData) => ({
         ...prevData,
-        InterviewLink: `http://localhost:3000/can/${result.interview._id}`,
+        InterviewLink: `http://localhost:3000/can?id=${result.interview._id}`,
       }));
       return result.interview._id;
 
@@ -62,7 +64,7 @@ export default function ExpertForm() {
         emailjs.send(
           'service_u84bp1n',
           'template_0lrcsxn',
-          { ...formData, InterviewLink: `http://localhost:3000/can/${interviewId}` },
+          { ...formData, InterviewLink: `http://localhost:3000/can?id=${interviewId}` },
           'ZIHQMfKI0iwengpp8'
         )
           .then((response) => {
