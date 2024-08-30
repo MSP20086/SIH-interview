@@ -1,15 +1,17 @@
 import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
+import { ObjectId } from 'mongodb'; 
 
 export const config = {
     api: {
-        bodyParser: false
-    }
+        bodyParser: false,
+    },
 };
 
 export async function PATCH(request) {
     try {
         const data = await request.formData();
+        console.log('Data:', data);
         const file = data.get('resume');
 
         if (!file) {
@@ -26,7 +28,6 @@ export async function PATCH(request) {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${process.env.PINATA_JWT}`
-                // Do not set 'Content-Type' header manually
             },
             body: formDataToSend
         });
@@ -37,8 +38,6 @@ export async function PATCH(request) {
         }
 
         const pinataResult = await pinataResponse.json();
-        console.log('Pinata Response:', pinataResult);
-
         const { IpfsHash } = pinataResult;
 
         if (!IpfsHash) {
@@ -47,28 +46,32 @@ export async function PATCH(request) {
 
         const resumeLink = `https://gateway.pinata.cloud/ipfs/${IpfsHash}`;
 
-        // Connect to MongoDB
         const { db } = await connectToDatabase();
 
-        // Store data in MongoDB
         const { id, name, email, skillSets } = Object.fromEntries(data.entries());
-        const interview = await db.collection('interviews').findOne({ _id: ObjectId(id) });
+
+        console.log('ID:', id);
+        if (!ObjectId.isValid(id)) {
+            return NextResponse.json({ error: 'Invalid ID format' }, { status: 400 });
+        }
+
+        const interview = await db.collection('interviews').findOne({ _id: new ObjectId(id) }); 
 
         if (!interview) {
             return NextResponse.json({ error: 'Interview not found' }, { status: 404 });
         }
 
-        interview.name = name;
-        interview.email = email;
+        
         interview.skillSets = skillSets;
         interview.resumeLink = resumeLink;
-
+        
         await db.collection('interviews').updateOne(
-            { _id: ObjectId(id) },
-            { $set: { name, email, skillSets, resumeLink } }
+            { _id: new ObjectId(id) }, 
+            { $set: interview }
         );
 
-        return NextResponse.json({ message: 'Submission successful', resumeLink }, { status: 200 });
+        console.log('Interview updated successfully:', interview);
+        return NextResponse.json({ message: 'Submission successful', resumeLink, interview }, { status: 200 });
     } catch (e) {
         console.error(e);
         return NextResponse.json(

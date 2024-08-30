@@ -1,9 +1,12 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { Button, Link } from '@nextui-org/react';
 
 export default function Page() {
   const searchParams = useSearchParams();
+  const [meetlink, setMeetLink] = useState('');
+  const [showmeetlink, setShowMeetLink] = useState(false);
   const [formData, setFormData] = useState({
     id: '',
     name: '',
@@ -45,6 +48,8 @@ export default function Page() {
     setResponseMessage('');
     console.log(formData);
     const formDataToSend = new FormData();
+    formDataToSend.append('id', formData.id);
+    console.log('id', formDataToSend.id);
     formDataToSend.append('name', formData.name);
     formDataToSend.append('email', formData.email);
     formDataToSend.append('skillSets', formData.skillSets);
@@ -52,6 +57,7 @@ export default function Page() {
       formDataToSend.append('resume', formData.resume);
     }
 
+    
     try {
       const response = await fetch('/api/candidate', {
         method: 'PATCH',
@@ -60,6 +66,8 @@ export default function Page() {
       const result = await response.json();
       if (response.ok) {
         setResponseMessage(`Submission successful`);
+        setMeetLink(result.interview.HostLink);
+        setShowMeetLink(true);
       } else {
         setResponseMessage(result.error || 'Submission failed');
       }
@@ -184,6 +192,18 @@ export default function Page() {
             By submitting, you agree to the <a className="underline" href="#0">terms & conditions</a>, and our <a className="underline" href="#0">privacy policy</a>.
           </div>
         </form>
+        <Button
+          as={Link}
+          href={meetlink}
+          target="_blank"
+          className={`w-full mt-4 p-2 rounded-lg font-semibold transition-all duration-300 
+            ${showmeetlink
+              ? 'bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500'
+              : 'hidden'
+            }`}
+          >
+          Join the Interview
+        </Button>
       </div>
     </div>
   );
