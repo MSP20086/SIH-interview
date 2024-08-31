@@ -14,7 +14,7 @@ import {
   Pagination,
   Link,
 } from '@nextui-org/react'
-import { format, parseISO } from 'date-fns'
+import { format, parseISO, set } from 'date-fns'
 import { SearchIcon } from './SearchIcon'
 import ExpertForm from '../expertform'
 
@@ -52,6 +52,7 @@ export default function FutureTableComponent({ userId }) {
   const [visibleColumns, setVisibleColumns] = useState(new Set(baseColumns))
   const [statusFilter, setStatusFilter] = useState(new Set([]))
   const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [interviewId, setInterviewId] = useState('')
   const [sortDescriptor, setSortDescriptor] = useState({
     column: 'name',
     direction: 'ascending',
@@ -157,8 +158,12 @@ export default function FutureTableComponent({ userId }) {
 
   const renderCell = useCallback((user, columnKey) => {
     const cellValue = user[columnKey]
-
+    if (columnKey === '_id') {
+      setInterviewId(cellValue);
+    }
     switch (columnKey) {
+      case '_id':
+        return cellValue.slice(-3)
       case 'name':
         return (
           <User
@@ -234,7 +239,7 @@ export default function FutureTableComponent({ userId }) {
             variant='solid'
             size='sm'
             as={Link}
-            href={`/questions`}
+            href={`/questions?interviewId=${interviewId}`}
             target='_blank'
             rel='noopener noreferrer'
           >
