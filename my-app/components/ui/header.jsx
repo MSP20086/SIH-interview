@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Logo from './logo';
 import MobileMenu from './mobile-menu';
@@ -10,8 +11,7 @@ import { Button, Avatar, AvatarIcon } from '@nextui-org/react';
 export default function Header() {
   const [top, setTop] = useState(true);
   const { user, logout } = useUser();
-
-  console.log(user)
+  const router = useRouter();
 
   const scrollHandler = () => {
     window.pageYOffset > 10 ? setTop(false) : setTop(true);
@@ -22,6 +22,11 @@ export default function Header() {
     window.addEventListener('scroll', scrollHandler);
     return () => window.removeEventListener('scroll', scrollHandler);
   }, [top, user]);
+
+  const handleLogout = () => {
+    logout();
+    router.push('/');
+  };
 
   return (
     <header className={`fixed w-full z-30 md:bg-opacity-90 transition bg-white duration-300 ease-in-out ${!top ? 'backdrop-blur-sm shadow-lg' : ''}`}>
@@ -56,7 +61,7 @@ export default function Header() {
                     }}
                   />
                   <Button
-                    onClick={logout}
+                    onClick={handleLogout} // Use handleLogout instead of logout
                     className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out bg-transparent hover:bg-gray-100"
                   >
                     Log out

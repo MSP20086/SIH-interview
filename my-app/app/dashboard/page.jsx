@@ -17,12 +17,19 @@ const Dashboard = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const userId = searchParams.get('userid')
-  console.log(`userid: ${userId}`)
+  const userId = searchParams.get('id')
+  console.log(`id: ${userId}`)
 
   useEffect(() => {
     if (user === null) {
-      return
+      return (
+        <section className="bg-gradient-to-b from-gray-100 to-white h-screen flex items-center justify-center">
+          <div className="flex items-center">
+            <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent border-solid rounded-full animate-spin"></div>
+            <p className="ml-4 text-gray-800">Loading user data...</p>
+          </div>
+        </section>
+      );
     }
 
     if (user.role !== 'expert') {
