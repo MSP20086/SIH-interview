@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import {
   Table,
   TableHeader,
@@ -13,10 +13,20 @@ import {
   User,
   Pagination,
 } from '@nextui-org/react'
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { SearchIcon } from './SearchIcon'
-import { columns, users } from './data'
 import ExpertForm from '../expertform'
+
+const columns = [
+  { name: 'ID', uid: '_id', sortable: true },
+  { name: 'NAME', uid: 'name', sortable: true },
+  { name: 'ROLE', uid: 'jobPosition', sortable: true },
+  { name: 'RESUME', uid: 'resumeLink' },
+  { name: 'EMAIL', uid: 'email' },
+  { name: 'INTERVIEW DATE', uid: 'interviewTime', sortable: true },
+  { name: 'INVITE', uid: 'HostLink' },
+  { name: 'QUESTIONS', uid: 'questions' },
+]
 
 const statusColorMap = {
   selected: 'success',
@@ -25,41 +35,74 @@ const statusColorMap = {
 }
 
 const baseColumns = [
-  'id',
+  '_id',
   'name',
-  'role',
+  'jobPosition',
   'email',
-  'status',
-  'dateOfInterview',
-  'resume',
-  'invite',
-  'questions'
-
+  'interviewTime',
+  'resumeLink',
+  'HostLink',
+  'questions',
 ]
 
-export default function FutureTableComponent() {
-  const [filterValue, setFilterValue] = React.useState('')
-  const [selectedKeys, setSelectedKeys] = React.useState(new Set([]))
-  const [visibleColumns, setVisibleColumns] = React.useState(
-    new Set(baseColumns)
-  )
-  const [statusFilter, setStatusFilter] = React.useState(new Set([]))
-  const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const [sortDescriptor, setSortDescriptor] = React.useState({
+export default function FutureTableComponent({ userId }) {
+  const [filterValue, setFilterValue] = useState('')
+  const [selectedKeys, setSelectedKeys] = useState(new Set([]))
+  const [visibleColumns, setVisibleColumns] = useState(new Set(baseColumns))
+  const [statusFilter, setStatusFilter] = useState(new Set([]))
+  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [sortDescriptor, setSortDescriptor] = useState({
     column: 'name',
     direction: 'ascending',
   })
-  const [page, setPage] = React.useState(1)
+  const [page, setPage] = useState(1)
+  const [users, setUsers] = useState([]) // State for storing fetched users
 
   const hasSearchFilter = Boolean(filterValue)
 
-  const headerColumns = React.useMemo(() => {
+  const fetchInterviews = useCallback(async () => {
+    try {
+      if (!userId) {
+        console.error('No userId provided')
+        return
+      }
+
+      const response = await fetch('/api/interviews/future', {
+        headers: {
+          userid: userId, // Ensure proper header key
+        },
+      })
+
+      const data = await response.json()
+      console.log('API response data:', data) // Debug log
+
+      if (response.ok) {
+        const { candidates = [] } = data
+        setUsers(candidates)
+        console.log('Fetched candidates:', candidates) // Debug log
+      } else {
+        console.error('API error message:', data.message)
+      }
+    } catch (error) {
+      console.error('Error fetching interviews:', error)
+    }
+  }, [userId])
+
+  useEffect(() => {
+    fetchInterviews()
+  }, [fetchInterviews]) // Refetch if userId changes
+
+  const handleInterviewScheduled = useCallback(() => {
+    fetchInterviews()
+  }, [fetchInterviews])
+
+  const headerColumns = useMemo(() => {
     return columns.filter((column) =>
       Array.from(visibleColumns).includes(column.uid)
     )
   }, [visibleColumns])
 
-  const filteredItems = React.useMemo(() => {
+  const filteredItems = useMemo(() => {
     let filteredUsers = [...users]
 
     if (hasSearchFilter) {
@@ -74,18 +117,18 @@ export default function FutureTableComponent() {
     }
 
     return filteredUsers
-  }, [users, filterValue, statusFilter])
+  }, [users, filterValue, statusFilter, hasSearchFilter])
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage)
 
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage
     const end = start + rowsPerPage
 
     return filteredItems.slice(start, end)
   }, [page, filteredItems, rowsPerPage])
 
-  const sortedItems = React.useMemo(() => {
+  const sortedItems = useMemo(() => {
     return [...items].sort((a, b) => {
       const aValue = a[sortDescriptor.column]
       const bValue = b[sortDescriptor.column]
@@ -95,15 +138,24 @@ export default function FutureTableComponent() {
     })
   }, [sortDescriptor, items])
 
-  const renderCell = React.useCallback((user, columnKey) => {
-    const cellValue = user[columnKey]
-
-    const formatDate = (dateString) => {
-      const date = new Date(dateString)
-      const formattedDate = format(date, 'MM/dd/yyyy')
-      const formattedTime = format(date, 'HH:mm')
-      return { formattedDate, formattedTime }
+  const formatDate = (dateString) => {
+    let date
+    try {
+      date = parseISO(dateString)
+    } catch (error) {
+      console.error('Error parsing date:', dateString, error)
+      date = new Date(dateString) // Fallback
     }
+    if (isNaN(date.getTime())) {
+      return { formattedDate: 'Invalid Date', formattedTime: '' }
+    }
+    const formattedDate = format(date, 'MM/dd/yyyy')
+    const formattedTime = format(date, 'HH:mm')
+    return { formattedDate, formattedTime }
+  }
+
+  const renderCell = useCallback((user, columnKey) => {
+    const cellValue = user[columnKey]
 
     switch (columnKey) {
       case 'name':
@@ -116,7 +168,7 @@ export default function FutureTableComponent() {
             {user.email}
           </User>
         )
-      case 'role':
+      case 'jobPosition':
         return (
           <div className='flex flex-col'>
             <p className='text-bold text-small capitalize'>{cellValue}</p>
@@ -125,18 +177,7 @@ export default function FutureTableComponent() {
             </p>
           </div>
         )
-      case 'status':
-        return (
-          <Chip
-            className='capitalize'
-            color={statusColorMap[user.status]}
-            size='sm'
-            variant='flat'
-          >
-            {cellValue}
-          </Chip>
-        )
-      case 'dateOfInterview':
+      case 'interviewTime':
         const { formattedDate, formattedTime } = formatDate(cellValue)
         return (
           <div>
@@ -149,29 +190,71 @@ export default function FutureTableComponent() {
             </div>
           </div>
         )
+      case 'resumeLink':
+        return (
+          <Button
+            color='primary'
+            variant='solid'
+            size='sm'
+            as='a'
+            href={cellValue}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            View Resume
+          </Button>
+        )
+      case 'HostLink':
+        return (
+          <Button
+            color='primary'
+            variant='solid'
+            size='sm'
+            as='a'
+            href={cellValue}
+            target='_blank' // Opens the link in a new tab
+            rel='noopener noreferrer'
+          >
+            Join Meet
+          </Button>
+        )
+      case 'questions':
+        return (
+          <Button
+            color='primary'
+            variant='solid'
+            size='sm'
+            as='a'
+            href={cellValue}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            View Questions
+          </Button>
+        )
       default:
-        return cellValue
+        return cellValue || 'N/A'
     }
   }, [])
 
-  const onNextPage = React.useCallback(() => {
+  const onNextPage = useCallback(() => {
     if (page < pages) {
       setPage(page + 1)
     }
   }, [page, pages])
 
-  const onPreviousPage = React.useCallback(() => {
+  const onPreviousPage = useCallback(() => {
     if (page > 1) {
       setPage(page - 1)
     }
   }, [page])
 
-  const onRowsPerPageChange = React.useCallback((e) => {
+  const onRowsPerPageChange = useCallback((e) => {
     setRowsPerPage(Number(e.target.value))
     setPage(1)
   }, [])
 
-  const onSearchChange = React.useCallback((value) => {
+  const onSearchChange = useCallback((value) => {
     if (value) {
       setFilterValue(value)
       setPage(1)
@@ -180,12 +263,12 @@ export default function FutureTableComponent() {
     }
   }, [])
 
-  const onClear = React.useCallback(() => {
+  const onClear = useCallback(() => {
     setFilterValue('')
     setPage(1)
   }, [])
 
-  const topContent = React.useMemo(() => {
+  const topContent = useMemo(() => {
     return (
       <div className='flex flex-col gap-4'>
         <div className='flex justify-between items-center gap-3'>
@@ -198,93 +281,57 @@ export default function FutureTableComponent() {
             onClear={() => onClear()}
             onValueChange={onSearchChange}
           />
-          <ExpertForm/>
-        </div>
-
-        <div className='flex justify-between items-center'>
-          <span className='text-default-400 text-small'>
-            Total {users.length} users
-          </span>
-          <label className='flex items-center text-default-400 text-small'>
-            Rows per page:
-            <select
-              className='bg-transparent outline-none text-default-400 text-small'
-              onChange={onRowsPerPageChange}
-            >
-              <option value='5'>5</option>
-              <option value='10'>10</option>
-              <option value='15'>15</option>
-            </select>
-          </label>
+          <ExpertForm onInterviewScheduled={handleInterviewScheduled} />
         </div>
       </div>
     )
-  }, [
-    filterValue,
-    statusFilter,
-    visibleColumns,
-    onRowsPerPageChange,
-    users.length,
-    onSearchChange,
-    onClear,
-  ])
+  }, [filterValue, handleInterviewScheduled, onClear, onSearchChange])
 
-  const bottomContent = React.useMemo(() => {
+  const bottomContent = useMemo(() => {
     return (
       <div className='py-2 px-2 flex justify-between items-center'>
+        <div className='flex items-center gap-2'>
+          <small>Rows per page:</small>
+          <select
+            className='bg-white text-black rounded-md border p-1'
+            value={rowsPerPage}
+            onChange={onRowsPerPageChange}
+          >
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+          </select>
+        </div>
         <Pagination
-          isCompact
           showControls
           showShadow
           color='primary'
           page={page}
+          onChange={(newPage) => setPage(newPage)}
           total={pages}
-          onChange={setPage}
+          onNext={onNextPage}
+          onPrevious={onPreviousPage}
         />
-        <div className='hidden sm:flex w-[30%] justify-end gap-2'>
-          <Button
-            isDisabled={page === 1}
-            size='sm'
-            variant='flat'
-            onPress={onPreviousPage}
-          >
-            Previous
-          </Button>
-          <Button
-            isDisabled={page === pages}
-            size='sm'
-            variant='flat'
-            onPress={onNextPage}
-          >
-            Next
-          </Button>
-        </div>
       </div>
     )
   }, [
-    selectedKeys,
-    filteredItems.length,
     page,
     pages,
+    rowsPerPage,
+    onRowsPerPageChange,
     onNextPage,
     onPreviousPage,
   ])
 
   return (
     <Table
-      aria-label='User Data Table'
-      isHeaderSticky
-      bottomContent={bottomContent}
-      bottomContentPlacement='outside'
-      classNames={{
-        wrapper: 'max-h-[382px]',
-      }}
-      selectedKeys={selectedKeys}
+      aria-label='Future Interviews Table'
       sortDescriptor={sortDescriptor}
-      topContent={topContent}
-      topContentPlacement='outside'
+      selectedKeys={selectedKeys}
       onSelectionChange={setSelectedKeys}
       onSortChange={setSortDescriptor}
+      topContent={topContent}
+      bottomContent={bottomContent}
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
@@ -297,9 +344,9 @@ export default function FutureTableComponent() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={'No users found'} items={sortedItems}>
+      <TableBody items={sortedItems}>
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow key={item._id}>
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}

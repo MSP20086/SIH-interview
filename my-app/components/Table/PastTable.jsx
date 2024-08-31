@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import {
   Table,
   TableHeader,
@@ -13,10 +13,28 @@ import {
   User,
   Pagination,
 } from '@nextui-org/react'
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { SearchIcon } from './SearchIcon'
-import { columns, users } from './data'
 import ExpertForm from '../expertform'
+
+const columns = [
+  { name: 'ID', uid: '_id', sortable: true },
+  { name: 'NAME', uid: 'name', sortable: true },
+  { name: 'ROLE', uid: 'jobPosition', sortable: true },
+  { name: 'RESUME', uid: 'resumeLink' },
+  { name: 'EMAIL', uid: 'email' },
+  { name: 'STATUS', uid: 'status', sortable: true },
+  { name: 'INTERVIEW DATE', uid: 'interviewTime', sortable: true },
+  // { name: 'INVITE', uid: 'HostLink' },
+  { name: 'REPORT', uid: 'report' },
+  // { name: 'QUESTIONS', uid: 'questions' },
+]
+
+// const statusOptions = [
+//   { name: 'Selected', uid: 'selected' },
+//   { name: 'Rejected', uid: 'rejected' },
+//   { name: 'Pending', uid: 'pending' },
+// ]
 
 const statusColorMap = {
   selected: 'success',
@@ -24,41 +42,73 @@ const statusColorMap = {
   pending: 'warning',
 }
 
-  const baseColumns = [
-    'id',
-    'name',
-    'role',
-    'email',
-    'status',
-    'dateOfInterview',
-    'resume',
-    'report'
-  ]
+const baseColumns = [
+  '_id',
+  'name',
+  'jobPosition',
+  'email',
+  'status',
+  'interviewTime',
+  'resumeLink',
+  'HostLink',
+  // 'questions',
+  'report',
+]
 
-export default function PastTableComponent() {
-  const [filterValue, setFilterValue] = React.useState('')
-  const [selectedKeys, setSelectedKeys] = React.useState(new Set([]))
-  const [visibleColumns, setVisibleColumns] = React.useState(
-    new Set(baseColumns)
-  )
-  const [statusFilter, setStatusFilter] = React.useState(new Set([]))
-  const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const [sortDescriptor, setSortDescriptor] = React.useState({
+export default function PastTableComponent({ userId }) {
+  const [filterValue, setFilterValue] = useState('')
+  const [selectedKeys, setSelectedKeys] = useState(new Set([]))
+  const [visibleColumns, setVisibleColumns] = useState(new Set(baseColumns))
+  const [statusFilter, setStatusFilter] = useState(new Set([]))
+  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [sortDescriptor, setSortDescriptor] = useState({
     column: 'name',
     direction: 'ascending',
   })
-  const [page, setPage] = React.useState(1)
-
+  const [page, setPage] = useState(1)
+  const [users, setUsers] = useState([]) // State for storing fetched users
 
   const hasSearchFilter = Boolean(filterValue)
 
-  const headerColumns = React.useMemo(() => {
+  useEffect(() => {
+    const fetchInterviews = async () => {
+      try {
+        if (!userId) {
+          console.error('No userId provided')
+          return
+        }
+
+        const response = await fetch('/api/interviews/past', {
+          headers: {
+            userid: userId, // Ensure proper header key
+          },
+        })
+
+        const data = await response.json()
+        console.log('API response data:', data) // Debug log
+
+        if (response.ok) {
+          const { candidates = [] } = data
+          setUsers(candidates)
+          console.log('Fetched candidates:', candidates) // Debug log
+        } else {
+          console.error('API error message:', data.message)
+        }
+      } catch (error) {
+        console.error('Error fetching interviews:', error)
+      }
+    }
+
+    fetchInterviews()
+  }, [userId]) // Refetch if userId changes
+
+  const headerColumns = useMemo(() => {
     return columns.filter((column) =>
       Array.from(visibleColumns).includes(column.uid)
     )
   }, [visibleColumns])
 
-  const filteredItems = React.useMemo(() => {
+  const filteredItems = useMemo(() => {
     let filteredUsers = [...users]
 
     if (hasSearchFilter) {
@@ -77,14 +127,14 @@ export default function PastTableComponent() {
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage)
 
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage
     const end = start + rowsPerPage
 
     return filteredItems.slice(start, end)
   }, [page, filteredItems, rowsPerPage])
 
-  const sortedItems = React.useMemo(() => {
+  const sortedItems = useMemo(() => {
     return [...items].sort((a, b) => {
       const aValue = a[sortDescriptor.column]
       const bValue = b[sortDescriptor.column]
@@ -94,15 +144,24 @@ export default function PastTableComponent() {
     })
   }, [sortDescriptor, items])
 
-  const renderCell = React.useCallback((user, columnKey) => {
-    const cellValue = user[columnKey]
-
-    const formatDate = (dateString) => {
-      const date = new Date(dateString)
-      const formattedDate = format(date, 'MM/dd/yyyy')
-      const formattedTime = format(date, 'HH:mm')
-      return { formattedDate, formattedTime }
+  const formatDate = (dateString) => {
+    let date
+    try {
+      date = parseISO(dateString)
+    } catch (error) {
+      console.error('Error parsing date:', dateString, error)
+      date = new Date(dateString) // Fallback
     }
+    if (isNaN(date.getTime())) {
+      return { formattedDate: 'Invalid Date', formattedTime: '' }
+    }
+    const formattedDate = format(date, 'MM/dd/yyyy')
+    const formattedTime = format(date, 'HH:mm')
+    return { formattedDate, formattedTime }
+  }
+
+  const renderCell = useCallback((user, columnKey) => {
+    const cellValue = user[columnKey]
 
     switch (columnKey) {
       case 'name':
@@ -115,7 +174,7 @@ export default function PastTableComponent() {
             {user.email}
           </User>
         )
-      case 'role':
+      case 'jobPosition':
         return (
           <div className='flex flex-col'>
             <p className='text-bold text-small capitalize'>{cellValue}</p>
@@ -135,7 +194,7 @@ export default function PastTableComponent() {
             {cellValue}
           </Chip>
         )
-      case 'dateOfInterview':
+      case 'interviewTime':
         const { formattedDate, formattedTime } = formatDate(cellValue)
         return (
           <div>
@@ -148,29 +207,57 @@ export default function PastTableComponent() {
             </div>
           </div>
         )
+      case 'resumeLink':
+        return (
+          <Button
+            color='primary'
+            variant='solid'
+            size='sm'
+            as='a'
+            href={cellValue}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            View Resume
+          </Button>
+        )
+      case 'report':
+        return (
+          <Button
+            color='primary'
+            variant='solid'
+            size='sm'
+            as='a'
+            href={cellValue}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            View Report
+          </Button>
+        )
       default:
-        return cellValue
+        return cellValue || 'N/A'
     }
   }, [])
 
-  const onNextPage = React.useCallback(() => {
+  const onNextPage = useCallback(() => {
     if (page < pages) {
       setPage(page + 1)
     }
   }, [page, pages])
 
-  const onPreviousPage = React.useCallback(() => {
+  const onPreviousPage = useCallback(() => {
     if (page > 1) {
       setPage(page - 1)
     }
   }, [page])
 
-  const onRowsPerPageChange = React.useCallback((e) => {
+  const onRowsPerPageChange = useCallback((e) => {
     setRowsPerPage(Number(e.target.value))
     setPage(1)
   }, [])
 
-  const onSearchChange = React.useCallback((value) => {
+  const onSearchChange = useCallback((value) => {
     if (value) {
       setFilterValue(value)
       setPage(1)
@@ -179,45 +266,45 @@ export default function PastTableComponent() {
     }
   }, [])
 
-  const onClear = React.useCallback(() => {
+  const onClear = useCallback(() => {
     setFilterValue('')
     setPage(1)
   }, [])
 
-  const topContent = React.useMemo(() => {
-return (
-  <div className='flex flex-col gap-4'>
-    <div className='flex justify-between items-center gap-3'>
-      <Input
-        isClearable
-        className='w-full sm:max-w-[58%]'
-        placeholder='Search by name...'
-        startContent={<SearchIcon />}
-        value={filterValue}
-        onClear={() => onClear()}
-        onValueChange={onSearchChange}
-      />
-      <ExpertForm/>
-    </div>
+  const topContent = useMemo(() => {
+    return (
+      <div className='flex flex-col gap-4'>
+        <div className='flex justify-between items-center gap-3'>
+          <Input
+            isClearable
+            className='w-full sm:max-w-[58%]'
+            placeholder='Search by name...'
+            startContent={<SearchIcon />}
+            value={filterValue}
+            onClear={() => onClear()}
+            onValueChange={onSearchChange}
+          />
+          <ExpertForm />
+        </div>
 
-    <div className='flex justify-between items-center'>
-      <span className='text-default-400 text-small'>
-        Total {users.length} users
-      </span>
-      <label className='flex items-center text-default-400 text-small'>
-        Rows per page:
-        <select
-          className='bg-transparent outline-none text-default-400 text-small'
-          onChange={onRowsPerPageChange}
-        >
-          <option value='5'>5</option>
-          <option value='10'>10</option>
-          <option value='15'>15</option>
-        </select>
-      </label>
-    </div>
-  </div>
-)
+        <div className='flex justify-between items-center'>
+          <span className='text-default-400 text-small'>
+            Total {users.length} users
+          </span>
+          <label className='flex items-center text-default-400 text-small'>
+            Rows per page:
+            <select
+              className='bg-transparent outline-none text-default-400 text-small'
+              onChange={onRowsPerPageChange}
+            >
+              <option value='5'>5</option>
+              <option value='10'>10</option>
+              <option value='15'>15</option>
+            </select>
+          </label>
+        </div>
+      </div>
+    )
   }, [
     filterValue,
     statusFilter,
@@ -228,7 +315,7 @@ return (
     onClear,
   ])
 
-  const bottomContent = React.useMemo(() => {
+  const bottomContent = useMemo(() => {
     return (
       <div className='py-2 px-2 flex justify-between items-center'>
         <Pagination
@@ -298,7 +385,7 @@ return (
       </TableHeader>
       <TableBody emptyContent={'No users found'} items={sortedItems}>
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow key={item._id}>
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}

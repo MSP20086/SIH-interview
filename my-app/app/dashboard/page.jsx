@@ -39,7 +39,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen space-y-4 p-4 pt-24 '>
+    <div className='flex flex-col items-center justify-center min-h-screen space-y-4 '>
       <Tabs
         aria-label='Options'
         selectedKey={activeTab}
@@ -47,12 +47,12 @@ const Dashboard = () => {
       >
         <Tab key='pastInterview' title='Past Interviews'>
           <div className='w-full'>
-            <PastTableComponent />
+            <PastTableComponent userId={userId} />
           </div>
         </Tab>
         <Tab key='scheduledInterview' title='Scheduled Interviews'>
           <div className='w-full'>
-            <FutureTableComponent />
+            <FutureTableComponent userId={userId} />
           </div>
         </Tab>
       </Tabs>
