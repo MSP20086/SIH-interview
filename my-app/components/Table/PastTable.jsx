@@ -27,7 +27,7 @@ const columns = [
   { name: 'INTERVIEW DATE', uid: 'interviewTime', sortable: true },
   // { name: 'INVITE', uid: 'HostLink' },
   { name: 'REPORT', uid: 'report' },
-  // { name: 'QUESTIONS', uid: 'questions' },
+  { name: 'QUESTIONS', uid: 'questions' },
 ]
 
 // const statusOptions = [
@@ -232,6 +232,20 @@ export default function PastTableComponent({ userId }) {
             rel='noopener noreferrer'
           >
             View Report
+          </Button>
+        )
+      case 'questions':
+        return (
+          <Button
+            color='primary'
+            variant='solid'
+            size='sm'
+            as='a'
+            href={`/questions`}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            View Questions
           </Button>
         )
       default:

@@ -212,7 +212,7 @@ export default function FutureTableComponent({ userId }) {
             size='sm'
             as='a'
             href={cellValue}
-            target='_blank' // Opens the link in a new tab
+            target='_blank'
             rel='noopener noreferrer'
           >
             Join Meet
@@ -225,8 +225,7 @@ export default function FutureTableComponent({ userId }) {
             variant='solid'
             size='sm'
             as='a'
-            href={cellValue}
-            target='_blank'
+            href={`/questions`}
             rel='noopener noreferrer'
           >
             View Questions
