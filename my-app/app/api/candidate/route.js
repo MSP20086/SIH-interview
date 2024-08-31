@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
-import { ObjectId } from 'mongodb'; 
+import { ObjectId } from 'mongodb';
 
 export const config = {
     api: {
@@ -18,12 +18,10 @@ export async function PATCH(request) {
             return NextResponse.json({ error: 'Resume file is missing' }, { status: 400 });
         }
 
-        // Prepare FormData for Pinata
         const formDataToSend = new FormData();
         formDataToSend.append('file', file);
         formDataToSend.append('pinataMetadata', JSON.stringify({ name: 'Resume' }));
 
-        // Upload file to Pinata
         const pinataResponse = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
             method: 'POST',
             headers: {
@@ -55,18 +53,18 @@ export async function PATCH(request) {
             return NextResponse.json({ error: 'Invalid ID format' }, { status: 400 });
         }
 
-        const interview = await db.collection('interviews').findOne({ _id: new ObjectId(id) }); 
+        const interview = await db.collection('interviews').findOne({ _id: new ObjectId(id) });
 
         if (!interview) {
             return NextResponse.json({ error: 'Interview not found' }, { status: 404 });
         }
 
-        
+
         interview.skillSets = skillSets;
         interview.resumeLink = resumeLink;
-        
+
         await db.collection('interviews').updateOne(
-            { _id: new ObjectId(id) }, 
+            { _id: new ObjectId(id) },
             { $set: interview }
         );
 

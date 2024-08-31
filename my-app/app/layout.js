@@ -37,15 +37,24 @@ export default function RootLayout({ children }) {
 function ContentWrapper({ children }) {
   const { user } = useUser();
   const router = useRouter();
-  console.log(user);
+  const pathname = router.pathname || '';
+  if (user) {
+    console.log(user.role)
+  }
 
   // useEffect(() => {
-  //   // Redirect to sign-in page if the user is not logged in
-  //   if (!user && router.pathname !== '/signin') {
+  //   if (!user) {
   //     router.push('/signin');
+  //   } else if (user.role === 'candidate') {
+  //     if (pathname !== '/' && !pathname.startsWith('/?id=')) {
+  //       router.push('/');
+  //     }
+  //   } else if (user.role === 'expert') {
+  //     if (pathname !== '/dashboard') {
+  //       router.push('/dashboard');
+  //     }
   //   }
-  // }, [user, router]);
+  // }, [user, pathname, router]);
 
   return <>{children}</>;
 }
-

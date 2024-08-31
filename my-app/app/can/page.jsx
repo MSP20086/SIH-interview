@@ -1,82 +1,100 @@
 'use client'
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { Button, Link } from '@nextui-org/react';
+
+import React, { useState, useEffect } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
+import { Button, Link } from '@nextui-org/react'
+import { useUser } from '@/app/context/user'
 
 export default function Page() {
-  const searchParams = useSearchParams();
-  const [meetlink, setMeetLink] = useState('');
-  const [showmeetlink, setShowMeetLink] = useState(false);
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const { user } = useUser()
+
+  const [meetlink, setMeetLink] = useState('')
+  const [showmeetlink, setShowMeetLink] = useState(false)
   const [formData, setFormData] = useState({
     id: '',
     name: '',
     email: '',
     skillSets: '',
     resume: null,
-  });
+  })
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [responseMessage, setResponseMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [responseMessage, setResponseMessage] = useState('')
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const idFromURL = searchParams.get('id');  // Get the 'id' parameter from the URL
+    const idFromURL = searchParams.get('id')
     if (idFromURL) {
-      setFormData((prevFormData) => ({ ...prevFormData, id: idFromURL }));
+      setFormData((prevFormData) => ({ ...prevFormData, id: idFromURL }))
     }
-  }, [searchParams]);
 
-  
+    if (user === null) {
+      return
+    }
+
+    if (user.role !== 'candidate') {
+      router.push('/')
+      return
+    }
+
+    setLoading(false)
+  }, [searchParams, user, router])
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    const { name, value } = e.target
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: value,
-    });
-  };
+    }))
+  }
 
   const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       resume: e.target.files[0],
-    });
-  };
+    }))
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setResponseMessage('');
-    console.log(formData);
-    const formDataToSend = new FormData();
-    formDataToSend.append('id', formData.id);
-    console.log('id', formDataToSend.id);
-    formDataToSend.append('name', formData.name);
-    formDataToSend.append('email', formData.email);
-    formDataToSend.append('skillSets', formData.skillSets);
+    e.preventDefault()
+    setIsSubmitting(true)
+    setResponseMessage('')
+
+    const formDataToSend = new FormData()
+    formDataToSend.append('id', formData.id)
+    formDataToSend.append('name', formData.name)
+    formDataToSend.append('email', formData.email)
+    formDataToSend.append('skillSets', formData.skillSets)
     if (formData.resume) {
-      formDataToSend.append('resume', formData.resume);
+      formDataToSend.append('resume', formData.resume)
     }
 
-    
     try {
       const response = await fetch('/api/candidate', {
         method: 'PATCH',
         body: formDataToSend,
-      });
-      const result = await response.json();
+      })
+      const result = await response.json()
+
       if (response.ok) {
-        setResponseMessage(`Submission successful`);
-        setMeetLink(result.interview.HostLink);
-        setShowMeetLink(true);
+        setResponseMessage('Submission successful')
+        setMeetLink(result.interview.HostLink)
+        setShowMeetLink(true)
       } else {
-        setResponseMessage(result.error || 'Submission failed');
+        setResponseMessage(result.error || 'Submission failed')
       }
     } catch (error) {
-      setResponseMessage('An error occurred while submitting the form.');
+      setResponseMessage('An error occurred while submitting the form.')
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
+
+  if (loading) {
+    return <p>Loading...</p>
+  }
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen md:h-screen pt-16 md:pt-20 bg-gray-50 overflow-y-auto">
@@ -159,7 +177,7 @@ export default function Page() {
             <button
               type="submit"
               className={`w-full p-2 rounded-lg font-semibold transition-all duration-300 
-      ${isSubmitting
+                ${isSubmitting
                   ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
                   : 'bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500'
                 }`}
@@ -182,7 +200,7 @@ export default function Page() {
 
           {responseMessage && (
             <div className="text-center mt-4">
-              <p className={`text - lg ${responseMessage.includes('error') ? 'text-red-600' : 'text-green-600'}`}>
+              <p className={`text-lg ${responseMessage.includes('error') ? 'text-red-600' : 'text-green-600'}`}>
                 {responseMessage}
               </p>
             </div>
@@ -192,19 +210,17 @@ export default function Page() {
             By submitting, you agree to the <a className="underline" href="#0">terms & conditions</a>, and our <a className="underline" href="#0">privacy policy</a>.
           </div>
         </form>
-        <Button
-          as={Link}
-          href={meetlink}
-          target="_blank"
-          className={`w-full mt-4 p-2 rounded-lg font-semibold transition-all duration-300 
-            ${showmeetlink
-              ? 'bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500'
-              : 'hidden'
-            }`}
+        {showmeetlink && (
+          <Button
+            as={Link}
+            href={meetlink}
+            target="_blank"
+            className="w-full mt-4 p-2 rounded-lg font-semibold transition-all duration-300 bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
-          Join the Interview
-        </Button>
+            Join the Interview
+          </Button>
+        )}
       </div>
     </div>
-  );
+  )
 }
