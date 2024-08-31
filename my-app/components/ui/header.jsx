@@ -36,8 +36,9 @@ export default function Header() {
       <div className="max-w-6xl mx-auto px-5 sm:px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Site branding */}
-          <div className="shrink-0 mr-4">
+          <div className="shrink-0 mr-4 flex flex-row gap-1">
             <Logo />
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400 font-bold text-2xl">Nexus</span>
           </div>
 
           {/* Desktop navigation */}
@@ -50,11 +51,17 @@ export default function Header() {
                       href={`/dashboard/?userid=${user._id}`}
                       as={Link}
                       color="transparent"
-                      className="font-medium text-gray-600 hover:bg-slate-300 px-5 py-3 flex items-center transition duration-150 ease-in-out"
+                      className="font-medium text-gray-600 hover:bg-slate-300 px-3 py-3 flex items-center transition duration-150 ease-in-out"
                     >
                       Dashboard
                     </Button>
                   )}
+                  <Button
+                    onClick={handleLogout} // Use handleLogout instead of logout
+                    className="font-medium text-gray-600 hover:text-gray-900 px-3 py-3 flex items-center transition duration-150 ease-in-out bg-transparent hover:bg-gray-100"
+                  >
+                    Log out
+                  </Button>
                   <Avatar
                     icon={<AvatarIcon />}
                     size="md"
@@ -63,12 +70,6 @@ export default function Header() {
                       icon: "text-black/80",
                     }}
                   />
-                  <Button
-                    onClick={handleLogout} // Use handleLogout instead of logout
-                    className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out bg-transparent hover:bg-gray-100"
-                  >
-                    Log out
-                  </Button>
                 </div>
               ) : (
                 <>

@@ -12,6 +12,7 @@ import {
   Chip,
   User,
   Pagination,
+  Link,
 } from '@nextui-org/react'
 import { format, parseISO } from 'date-fns'
 import { SearchIcon } from './SearchIcon'
@@ -196,7 +197,7 @@ export default function FutureTableComponent({ userId }) {
             color='primary'
             variant='solid'
             size='sm'
-            as='a'
+            as={Link}
             href={cellValue}
             target='_blank'
             rel='noopener noreferrer'
@@ -210,12 +211,13 @@ export default function FutureTableComponent({ userId }) {
             color='primary'
             variant='solid'
             size='sm'
-            as='a'
+            as={Link}
             href={cellValue}
             target='_blank'
             rel='noopener noreferrer'
+            showAnchorIcon
           >
-            Join Meet
+            Join
           </Button>
         )
       case 'questions':
@@ -224,7 +226,7 @@ export default function FutureTableComponent({ userId }) {
             color='primary'
             variant='solid'
             size='sm'
-            as='a'
+            as={Link}
             href={`/questions`}
             target='_blank'
             rel='noopener noreferrer'
