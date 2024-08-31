@@ -20,9 +20,14 @@ export function UserProvider({ children }) {
         }
     }, [user]);
 
-    const logout = () => {
-        setUser(null);
-        localStorage.removeItem('user');
+    const logout = async () => {
+        try {
+            setUser(null);
+            localStorage.removeItem('user');
+            router.push('/');
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
     };
 
     return (

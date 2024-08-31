@@ -26,7 +26,6 @@ export default function RootLayout({ children }) {
             <ContentWrapper>
               {children}
             </ContentWrapper>
-            <Banner />
           </div>
         </body>
       </html>

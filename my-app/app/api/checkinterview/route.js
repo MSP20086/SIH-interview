@@ -1,21 +1,23 @@
 import { connectToDatabase } from '@/lib/mongodb'; // Adjust the import path as necessary
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { ObjectId } from 'mongodb';
 
 export async function POST(req) {
-    const { interviewID, userEmail } = await req.json();
-
-    if (!interviewID || !userEmail) {
-        return NextResponse.json({ error: 'Interview ID and user email are required' }, { status: 400 });
-    }
-
-    console.log('Interview ID:', interviewID);
-    console.log('User email:', userEmail);
-
     try {
+        const { interviewID, userEmail } = await req.json();
+
+        if (!interviewID || !userEmail) {
+            return NextResponse.json({ error: 'Interview ID and user email are required' }, { status: 400 });
+        }
+
+        console.log('Interview ID:', interviewID);
+        console.log('User email:', userEmail);
+
         const { db } = await connectToDatabase();
 
-        const interview = await db.collection('interviews').findOne({ _id: new ObjectId(interviewID) });
+        const interviewObjectId = ObjectId.isValid(interviewID) ? new ObjectId(interviewID) : interviewID;
+
+        const interview = await db.collection('interviews').findOne({ _id: interviewObjectId });
 
         if (!interview) {
             return NextResponse.json({ error: 'Interview not found' }, { status: 404 });

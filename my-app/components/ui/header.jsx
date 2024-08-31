@@ -23,11 +23,14 @@ export default function Header() {
     return () => window.removeEventListener('scroll', scrollHandler);
   }, [top, user]);
 
-  const handleLogout = () => {
-    logout();
-    router.push('/');
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push('/');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
   };
-
   return (
     <header className={`fixed w-full z-30 md:bg-opacity-90 transition bg-white duration-300 ease-in-out ${!top ? 'backdrop-blur-sm shadow-lg' : ''}`}>
       <div className="max-w-6xl mx-auto px-5 sm:px-6">

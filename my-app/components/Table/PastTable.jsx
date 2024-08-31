@@ -215,7 +215,6 @@ export default function PastTableComponent({ userId }) {
             size='sm'
             as='a'
             href={cellValue}
-            target='_blank'
             rel='noopener noreferrer'
           >
             View Resume
