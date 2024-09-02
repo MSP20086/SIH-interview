@@ -48,7 +48,7 @@ export default function Header() {
                 <div className="flex flex-row gap-1">
                   {user.role === 'expert' && (
                     <Button
-                      href={`/dashboard/?userid=${user._id}`}
+                      href={`/dashboard/?id=${user._id}`}
                       as={Link}
                       color="transparent"
                       className="font-medium text-gray-600 hover:bg-slate-300 px-3 py-3 flex items-center transition duration-150 ease-in-out"

@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Button, Link } from '@nextui-org/react'
 import { useUser } from '@/app/context/user'
-import { set } from 'date-fns'
 
 export default function Page() {
   const searchParams = useSearchParams()
@@ -23,7 +22,7 @@ export default function Page() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [responseMessage, setResponseMessage] = useState('')
-  const [isuser, setIsUser] = useState(false);
+  const [isUser, setIsUser] = useState(false)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -32,7 +31,8 @@ export default function Page() {
       setFormData((prevFormData) => ({ ...prevFormData, id: idFromURL }))
     }
 
-    if (user === null) {
+    if (!user) {
+      setLoading(false)
       return
     }
 
@@ -41,16 +41,27 @@ export default function Page() {
       return
     }
 
+    setIsUser(true)
     setLoading(false)
   }, [searchParams, user, router])
 
   if (loading) {
-    return (<section className="bg-gradient-to-b from-gray-100 to-white h-screen flex items-center justify-center">
-      <div className="flex items-center">
-        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent border-solid rounded-full animate-spin"></div>
-        <p className="ml-4 text-gray-800">Loading user data...</p>
-      </div>
-    </section>)
+    return (
+      <section className="bg-gradient-to-b from-gray-100 to-white h-screen flex items-center justify-center">
+        <div className="flex items-center">
+          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent border-solid rounded-full animate-spin"></div>
+          <p className="ml-4 text-gray-800">Loading user data...</p>
+        </div>
+      </section>
+    )
+  }
+
+  if (!isUser) {
+    return (
+      <section className="bg-gradient-to-b from-gray-100 to-white h-screen flex items-center justify-center">
+        <p className="text-gray-800">Access denied. You must be a candidate to view this page.</p>
+      </section>
+    )
   }
 
   const handleChange = (e) => {
@@ -101,20 +112,6 @@ export default function Page() {
     } finally {
       setIsSubmitting(false)
     }
-  }
-
-  if(!isuser){
-    return (
-      <section className="bg-gradient-to-b from-gray-100 to-white h-screen flex items-center justify-center">
-        <div className="flex items-center">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent border-solid rounded-full animate-spin"></div>
-          <p className="ml-4 text-gray-800">Loading user data...</p>
-        </div>
-      </section>
-    );
-  }
-  if (loading) {
-    return <p>Loading...</p>
   }
 
   return (

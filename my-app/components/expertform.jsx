@@ -14,7 +14,7 @@ import { useSearchParams } from 'next/navigation'
 
 export default function ExpertForm({ onInterviewScheduled }) {
   const SearchParams = useSearchParams()
-  const userId = SearchParams.get('userid')
+  const userId = SearchParams.get('id')
   const [isOpen, setIsOpen] = useState(false)
   const [id, setId] = useState('')
   const [isLoading, setIsLoading] = useState(false)
