@@ -29,11 +29,6 @@ const columns = [
   { name: 'QUESTIONS', uid: 'questions' },
 ]
 
-const statusColorMap = {
-  selected: 'success',
-  rejected: 'danger',
-  pending: 'warning',
-}
 
 const baseColumns = [
   '_id',
@@ -159,7 +154,9 @@ export default function FutureTableComponent({ userId }) {
   const renderCell = useCallback((user, columnKey) => {
     const cellValue = user[columnKey]
     if (columnKey === '_id') {
+      // console.log('Setting interview ID:', cellValue) // Debug log
       setInterviewId(cellValue);
+      console.log('Interview ID:', interviewId) // Debug log
     }
     switch (columnKey) {
       case '_id':
@@ -234,12 +231,13 @@ export default function FutureTableComponent({ userId }) {
         )
       case 'questions':
         return (
+          
           <Button
             color='primary'
             variant='solid'
             size='sm'
             as={Link}
-            href={`/questions?interviewId=${interviewId}`}
+            href={`/questions?interviewId=${user._id}`}
             target='_blank'
             rel='noopener noreferrer'
           >
