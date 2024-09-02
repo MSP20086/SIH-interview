@@ -8,7 +8,7 @@
 
 <div align="center">
    <strong>Nexus</strong> - Interview Process made easier - <br>
-  SIH hackathon 2024 || Team Nexus <br> <br>
+  SIH hackathon 2024 || Team Nexus || Problem Statement 1653<br> <br>
 </div>
 <hr>
 
@@ -48,7 +48,7 @@ Meet Nexus, a web-based Selector-Applicant Simulation Software, which aims to re
 ![HTML](https://img.shields.io/badge/-HTML5-E34F26?style=flat-square&logo=html5&logoColor=ffffff)
 ![CSS](https://img.shields.io/badge/-CSS3-1572B6?style=flat-square&logo=css3&logoColor=ffffff)
 ![JavaScript](https://img.shields.io/badge/-Javascript-F7DF1E?style=flat-square&logo=javascript&logoColor=000000)
-![Next.JS](https://img.shields.io/badge/-Next.Js-61DAFB?style=flat-square&logo=react&logoColor=ffffff)
+![Next.JS](https://img.shields.io/badge/Next-000000?style=flat-square&logo=next.js&logoColor=ffffff)
 ![Tailwind CSS](https://img.shields.io/badge/-TailwindCSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=ffffff)
 
 #### Database
@@ -57,7 +57,7 @@ Meet Nexus, a web-based Selector-Applicant Simulation Software, which aims to re
 
 ## 📈Progress
 
-#### Fully implemented features
+#### Implemented Features
 
 - [x] Secure authentication system for experts and candidates to access the website
 - [x] Friendly UI/UX design for users
