@@ -197,7 +197,7 @@ export default function FutureTableComponent({ userId }) {
           </div>
         )
       case 'resumeLink':
-        if(!cellValue.startsWith('https://gateway.pinata.cloud/ipfs/')){
+        if (!cellValue.startsWith('https://gateway.pinata.cloud/ipfs/')) {
           return (
             <Chip color='error' size='sm'>
               Resume not uploaded
@@ -239,7 +239,7 @@ export default function FutureTableComponent({ userId }) {
             variant='solid'
             size='sm'
             as={Link}
-            href={`/questions?interviewId=${interviewId}`}
+            href={`/questions`}
             target='_blank'
             rel='noopener noreferrer'
           >
