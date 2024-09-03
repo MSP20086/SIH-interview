@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function Logo() {
   return (
-    <Link href="/" className="block" aria-label="Cruip">
+    <Link href="/" className="flex flex-row gap-1" aria-label="Cruip" >
       <svg className="w-8 h-8" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <radialGradient cx="21.152%" cy="86.063%" fx="21.152%" fy="86.063%" r="79.941%" id="footer-logo">
@@ -13,6 +13,7 @@ export default function Logo() {
         </defs>
         <rect width="32" height="32" rx="16" fill="url(#footer-logo)" fillRule="nonzero" />
       </svg>
+      <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400 font-bold text-2xl">Nexus</span>
     </Link>
   )
 }

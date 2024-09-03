@@ -38,7 +38,6 @@ export default function Header() {
           {/* Site branding */}
           <div className="shrink-0 mr-4 flex flex-row gap-1">
             <Logo />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400 font-bold text-2xl">Nexus</span>
           </div>
 
           {/* Desktop navigation */}

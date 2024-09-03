@@ -1,29 +1,7 @@
 "use client";
-import React, { useState } from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Slider, Input, Card } from "@nextui-org/react";
+import React, { useEffect, useState } from "react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Slider, Input, Card, Checkbox } from "@nextui-org/react";
 
-const initialQuestions = [
-    "What is your favorite color?",
-    "How do you spend your free time?",
-    "What is your dream job?",
-    "What is the most important thing you've learned in your life?",
-    "What motivates you?",
-    "What are your strengths and weaknesses?",
-    "Describe a challenging situation you faced and how you overcame it.",
-    "What are your career goals?",
-    "How do you handle stress and pressure?",
-    "What is your favorite book or movie and why?",
-    "How do you approach problem-solving?",
-    "What do you enjoy most about your current or previous job?",
-    "What skills would you like to develop further?",
-    "How do you prioritize your tasks?",
-    "What type of work environment do you thrive in?",
-    "What is the best piece of advice you've ever received?",
-    "How do you stay updated with industry trends?",
-    "Describe a time when you worked as part of a team.",
-    "What do you think makes a good leader?",
-    "What do you enjoy doing outside of work?",
-];
 
 const columns = [
     {
@@ -36,25 +14,66 @@ const columns = [
     },
 ];
 
-export default function App() {
-    const [questions, setQuestions] = useState([]);
-    const [questionIndex, setQuestionIndex] = useState(0);
-    const [endInterview, setEndInterview] = useState(false);
-    const [customQuestion, setCustomQuestion] = useState("");
+export default function App({ interview }) {
+    console.log('Interview:', interview)
+    const role = interview.jobPosition;
+    const qualifications = interview.skillSets ? interview.skillSets : "DRDO specific skills";
+    const [difficulty, setDifficulty] = useState(1)
+    const [feedbackScore, setFeedbackScore] = useState(undefined)
+    const [score, setScore] = useState(interview.status === "pending" ? 0 : interview.totalScore);
 
-    const generateQuestion = () => {
-        if (questionIndex < initialQuestions.length) {
+    const [questions, setQuestions] = useState(interview.questions || []);
+    const [endInterview, setEndInterview] = useState(interview.status === "pending" ? false : true);
+    const [customQuestion, setCustomQuestion] = useState("");
+    console.log('Role:', role)
+    console.log('Qualifications:', qualifications)
+
+
+    const generateQue = async () => {
+        try {
+            console.log("Sending request to backend...");
+            const res = await fetch("/api/generateQuestion", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    role,
+                    qualifications,
+                    difficulty,
+                    feedback_score: feedbackScore,
+                }),
+            });
+
+            // Check if the fetch response is OK
+            if (!res.ok) {
+                console.error("Failed to fetch question:", res.statusText);
+                return;
+            }
+
+            const data = await res.json();
+            console.log("Response data:", data);
+
+            const questionText = data.output.split('\n\n')[1] || data.output;
+
+            // Create a new question object with a unique key
             const newQuestion = {
-                key: questions.length + 1,
-                question: initialQuestions[questionIndex],
-                rating: 3
+                key: questions.length + 1, // Ensure a unique key
+                question: questionText.trim(), // Trim any extra spaces
+                rating: 3, // Default rating
             };
+
+            // Set response content
             setQuestions([...questions, newQuestion]);
-            setQuestionIndex(questionIndex + 1);
-        } else {
-            console.log("No more questions available.");
+
+
+            // Update total score based on feedback
+            if (feedbackScore !== undefined && feedbackScore !== null) {
+                setScore(score + feedbackScore * difficulty);
+            }
+        } catch (error) {
+            console.error("Error generating question:", error);
         }
     };
+
 
     const handleRatingChange = (key, newRating) => {
         setQuestions((prevQuestions) =>
@@ -62,6 +81,7 @@ export default function App() {
                 q.key === key ? { ...q, rating: newRating } : q
             )
         );
+        setFeedbackScore(questions[questions.length - 1].rating);
     };
 
     const addCustomQuestion = () => {
@@ -78,11 +98,41 @@ export default function App() {
         setCustomQuestion("");
     };
 
-    const totalScore = questions.reduce((sum, q) => sum + q.rating, 0);
+    const totalscore = questions.reduce((sum, q) => sum + q.rating, 0);
     const maxScore = questions.length * 5;
 
+    const updateInterviewData = async () => {
+        try {
+            console.log("Updating interview data...");
+            const res = await fetch("/api/interviews/update", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    interviewId: interview._id, // Assuming you have the interview ID available
+                    questions: questions.map(q => ({
+                        key: q.key,           // Include the key
+                        question: q.question, // Include the question text
+                        rating: q.rating      // Include the rating
+                    })),
+                    totalScore: totalscore,
+                    maxScore: maxScore,
+                    status: "completed",
+                }),
+            });
+
+            if (!res.ok) {
+                console.error("Failed to update interview:", res.statusText);
+                return;
+            }
+
+            console.log("Interview updated successfully.");
+        } catch (error) {
+            console.error("Error updating interview data:", error);
+        }
+    };
+
     return (
-        <div style={{ padding: "20px", maxWidth: "1000px", margin: "auto" }}>
+        <div style={{ padding: "20px", maxWidth: "1600px", margin: "auto" }}>
             <Card css={{ padding: "20px", backgroundColor: "$accents2", maxWidth: "800px", margin: "auto" }}>
                 <Table aria-label="Questions">
                     <TableHeader columns={columns}>
@@ -98,7 +148,7 @@ export default function App() {
                     <TableBody items={questions}>
                         {(item) => (
                             <TableRow key={item.key}>
-                                <TableCell>{item.question}</TableCell>
+                                <TableCell className=" w-3/4"><span className=" line-clamp-3">{item.question}</span></TableCell>
                                 <TableCell>
                                     <Slider
                                         size="lg"
@@ -119,11 +169,14 @@ export default function App() {
             <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-between" }}>
                 {!endInterview && (
                     <>
-                        <Button onClick={generateQuestion} color="primary" auto>
+                        <Button onClick={generateQue} color="primary" auto>
                             Generate a Question
                         </Button>
                         <Button
-                            onClick={() => setEndInterview(true)}
+                            onClick={() => {
+                                updateInterviewData(); // Call the function to update the database
+                                setEndInterview(true);
+                            }}
                             color="secondary"
                             auto
                             style={{ marginLeft: "10px", backgroundColor: "#2dd4bf" }}
@@ -134,9 +187,11 @@ export default function App() {
                 )}
             </div>
             {endInterview && (
-                <div style={{ marginTop: "20px", textAlign: "center", fontWeight: "bold" }}>
-                    Total Score: {totalScore} / {maxScore}
-                </div>
+                <>
+                    <div style={{ marginTop: "20px", textAlign: "center", fontWeight: "bold" }}>
+                        Total Score: {totalscore} / {maxScore}
+                    </div>
+                </>
             )}
             {!endInterview && (
                 <div style={{ marginTop: "20px", display: "flex", alignItems: "center" }}>

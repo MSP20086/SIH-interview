@@ -164,6 +164,8 @@ export default function PastTableComponent({ userId }) {
     const cellValue = user[columnKey]
 
     switch (columnKey) {
+      case '_id':
+        return cellValue.slice(-3)
       case 'name':
         return (
           <User
@@ -215,7 +217,6 @@ export default function PastTableComponent({ userId }) {
             size='sm'
             as='a'
             href={cellValue}
-            rel='noopener noreferrer'
           >
             View Resume
           </Button>
@@ -227,9 +228,7 @@ export default function PastTableComponent({ userId }) {
             variant='solid'
             size='sm'
             as='a'
-            href={cellValue}
-            target='_blank'
-            rel='noopener noreferrer'
+            href={`/questions?interviewId=${user._id}`}
           >
             View Report
           </Button>
