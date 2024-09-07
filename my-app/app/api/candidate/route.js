@@ -2,12 +2,6 @@ import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
 
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
-
 export async function PATCH(request) {
     try {
         const data = await request.formData();
