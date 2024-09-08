@@ -1,8 +1,9 @@
 import { connectToDatabase } from '@/lib/mongodb'
+export const dynamic = 'force-dynamic';
 
 export async function GET(req) {
   try {
-    const currentUserId = req.headers.get('userid') 
+    const currentUserId = req.headers.get('userid')
 
     if (!currentUserId) {
       return new Response(JSON.stringify({ message: 'User ID is required' }), {

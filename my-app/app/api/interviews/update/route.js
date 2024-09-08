@@ -1,6 +1,7 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { NextResponse } from 'next/server';
 import { ObjectId } from 'mongodb';
+export const dynamic = 'force-dynamic';
 
 export async function POST(req) {
     try {

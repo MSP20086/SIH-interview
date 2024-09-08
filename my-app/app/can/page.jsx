@@ -218,10 +218,9 @@ export default function Page() {
             <button
               type='submit'
               className={`w-full p-2 rounded-lg font-semibold transition-all duration-300 
-                ${
-                  isSubmitting
-                    ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
-                    : 'bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500'
+                ${isSubmitting
+                  ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
+                  : 'bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500'
                 }`}
               disabled={isSubmitting}
             >
@@ -257,11 +256,10 @@ export default function Page() {
           {responseMessage && (
             <div className='text-center mt-4'>
               <p
-                className={`text-lg ${
-                  responseMessage.includes('error')
+                className={`text-lg ${responseMessage.includes('error')
                     ? 'text-red-600'
                     : 'text-green-600'
-                }`}
+                  }`}
               >
                 {responseMessage}
               </p>
