@@ -116,5 +116,5 @@ npm run dev
 - [Mihir](https://github.com/MSP20086)
 - [Tanay](https://github.com/TanayGada)
 - [Anish](https://github.com/AnishSingh09)
-- [Jishnu](https://github.com/jjb285)
+- [Jishnu](https://github.com/jjb825)
 - [Kamakshi]
