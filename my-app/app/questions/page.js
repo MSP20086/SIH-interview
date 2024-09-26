@@ -4,6 +4,7 @@ import ListItem from "@/components/ListItem";
 import Table from "@/components/question-table/table";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import animationDataload from '@/components/lottie/loading.json'
 
 export default function Questions() {
   const searchParams = useSearchParams();
@@ -16,7 +17,9 @@ export default function Questions() {
     const response = await fetch(`/api/interviews/get?interviewId=${interviewId}`);
     const data = await response.json();
     setDetails(data);
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false)
+    }, 3000)
     return data;
   };
 
@@ -29,9 +32,12 @@ export default function Questions() {
   if (loading) {
     return (
       <section className="bg-gradient-to-b from-gray-100 to-white h-screen flex items-center justify-center">
-        <div className="flex items-center">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent border-solid rounded-full animate-spin"></div>
-          <p className="ml-4 text-gray-800">Loading interview data...</p>
+        <div className="flex flex-col items-center justify-center space-y-4">
+          <Lottie
+            animationData={animationDataload}
+            style={{ height: '150px', width: '150px' }}
+          />
+          <p className="text-gray-800">Loading Interview data...</p>
         </div>
       </section>
     )
