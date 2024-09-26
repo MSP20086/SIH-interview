@@ -281,19 +281,22 @@ export default function FutureTableComponent({ userId }) {
   const topContent = useMemo(() => {
     return (
       <div className='flex flex-col gap-4'>
-        <div className='flex justify-between items-center gap-3'>
-          <Input
-            isClearable
-            className='w-full sm:max-w-[58%]'
-            placeholder='Search by name...'
-            startContent={<SearchIcon />}
-            value={filterValue}
-            onClear={() => onClear()}
-            onValueChange={onSearchChange}
-          />
+      <div className='flex flex-col sm:flex-row sm:justify-between items-center gap-3'>
+        <Input
+          isClearable
+          className='w-full sm:max-w-[58%]'
+          placeholder='Search by name...'
+          startContent={<SearchIcon />}
+          value={filterValue}
+          onClear={() => onClear()}
+          onValueChange={onSearchChange}
+        />
+        <div className="w-full sm:w-auto">
           <ExpertForm onInterviewScheduled={handleInterviewScheduled} />
         </div>
       </div>
+    </div>
+
     )
   }, [filterValue, handleInterviewScheduled, onClear, onSearchChange])
 

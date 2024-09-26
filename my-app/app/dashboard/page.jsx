@@ -7,7 +7,9 @@ import FutureTableComponent from '@/components/Table/FutureTable'
 import { useRouter } from 'next/navigation'
 import { useUser } from '@/app/context/user'
 import { useSearchParams } from 'next/navigation'
-
+import Lottie from 'lottie-react'
+import animationDataload from '@/components/loading.json'
+import animationDatasch from '@/components/schedule.json'
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('scheduledInterview')
@@ -31,21 +33,37 @@ const Dashboard = () => {
     }
 
     setHasAccess(true)
-    setLoading(false)
+    setTimeout(() => {
+      setLoading(false)
+    }, 3000)
   }, [user, router])
 
   if (loading) {
     return (
       <section className="bg-gradient-to-b from-gray-100 to-white h-screen flex items-center justify-center">
-        <div className="flex items-center">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent border-solid rounded-full animate-spin"></div>
-          <p className="ml-4 text-gray-800">Loading user data...</p>
+        <div className="flex flex-col items-center justify-center space-y-4">
+          <Lottie
+            animationData={animationDataload}
+            style={{ height: '150px', width: '150px' }}
+          />
+          <p className="text-gray-800">Loading user data...</p>
         </div>
-      </section>)
+      </section>
+    )
   }
 
   return (
-    <div className='bg-slate-50 flex flex-col items-center justify-center min-h-screen space-y-4 '>
+    <div className=' flex flex-col items-center justify-center min-h-screen space-y-4'>
+      {/* Fixed Lottie Animation */}
+      <div className="fixed right-20 bottom-20 pointer-events-none z-0 opacity-80 bg-transparent">
+        <Lottie
+          animationData={animationDatasch}
+          style={{ height: '500px', width: '500px' }} 
+          color="#F8FAFC"
+        />
+      </div>
+
+      {/* Tabs Section */}
       <Tabs
         aria-label='Options'
         selectedKey={activeTab}
@@ -63,6 +81,7 @@ const Dashboard = () => {
         </Tab>
       </Tabs>
     </div>
+
   )
 }
 
