@@ -58,7 +58,7 @@ export default function ExpertForm({ onInterviewScheduled }) {
       setId(result.interview._id.toString())
       setFormData((prevData) => ({
         ...prevData,
-        InterviewLink: `http://localhost:3000/can?id=${result.interview._id}`,
+        InterviewLink: `https://sih2024-seven.vercel.app/can?id=${result.interview._id}`,
       }))
       return result.interview._id
     } catch (error) {
@@ -78,7 +78,7 @@ export default function ExpertForm({ onInterviewScheduled }) {
             'template_0lrcsxn',
             {
               ...formData,
-              InterviewLink: `http://localhost:3000/can?id=${interviewId}`,
+              InterviewLink: `https://sih2024-seven.vercel.app/can?id=${interviewId}`,
             },
             'ZIHQMfKI0iwengpp8'
           )

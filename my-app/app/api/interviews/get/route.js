@@ -1,6 +1,7 @@
 import { connectToDatabase } from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
 import { NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
 
 export async function GET(request) {
     try {

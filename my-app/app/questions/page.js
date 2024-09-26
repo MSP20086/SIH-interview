@@ -19,12 +19,12 @@ export default function Questions() {
     setLoading(false);
     return data;
   };
-  
+
 
   useEffect(() => {
     console.log('Interview ID:', interviewId);
     fetchData();
-  },[interviewId]);
+  }, [interviewId]);
 
   if (loading) {
     return (

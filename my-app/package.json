@@ -35,6 +35,7 @@
     "next": "14.1.4",
     "react": "^18",
     "react-dom": "^18",
+    "sharp": "^0.33.5",
     "SIH-interview": "file:"
   },
   "devDependencies": {
