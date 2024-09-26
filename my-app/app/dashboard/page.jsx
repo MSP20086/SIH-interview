@@ -8,8 +8,8 @@ import { useRouter } from 'next/navigation'
 import { useUser } from '@/app/context/user'
 import { useSearchParams } from 'next/navigation'
 import Lottie from 'lottie-react'
-import animationDataload from '@/components/loading.json'
-import animationDatasch from '@/components/schedule.json'
+import animationDataload from '@/components/lottie/loading.json'
+import animationDatasch from '@/components/lottie/schedule.json'
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('scheduledInterview')
