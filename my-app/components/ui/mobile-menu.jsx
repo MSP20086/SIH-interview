@@ -3,10 +3,12 @@
 import { useState, useRef, useEffect } from "react"
 import { Transition } from "@headlessui/react"
 import Link from "next/link"
+import { useUser } from "@/app/context/user"
+import { Button } from "@nextui-org/react"
 
 export default function MobileMenu() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
-
+  const { user, logout } = useUser()
   const trigger = useRef(null)
   const mobileNav = useRef(null)
 
@@ -36,6 +38,14 @@ export default function MobileMenu() {
     return () => document.removeEventListener("keydown", keyHandler)
   })
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push('/');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
   return (
     <div className="flex md:hidden">
       {/* Hamburger button */}
@@ -58,7 +68,7 @@ export default function MobileMenu() {
         </svg>
       </button>
 
-      {/*Mobile navigation */}
+      {/* Mobile navigation */}
       <div ref={mobileNav}>
         <Transition
           show={mobileNavOpen}
@@ -73,35 +83,88 @@ export default function MobileMenu() {
           leaveTo="opacity-0"
         >
           <ul className="px-5 py-2">
-            <li>
-              <Link
-                href="/signin"
-                className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center"
-                onClick={() => setMobileNavOpen(false)}
-              >
-                Sign in
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/signup"
-                className="btn-sm text-gray-200 bg-gray-900 hover:bg-gray-800 w-full my-2"
-                onClick={() => setMobileNavOpen(false)}
-              >
-                <span>Sign up</span>
-                <svg
-                  className="w-3 h-3 fill-current text-gray-400 shrink-0 ml-2 -mr-1"
-                  viewBox="0 0 12 12"
-                  xmlns="http://www.w3.org/2000/svg"
+            {!user ? (
+              <>
+                <li>
+                  <Link
+                    href="/signin"
+                    className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center"
+                    onClick={() => setMobileNavOpen(false)}
+                  >
+                    Sign in
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/signup"
+                    className="btn-sm text-gray-200 bg-gray-900 hover:bg-gray-800 w-full my-2"
+                    onClick={() => setMobileNavOpen(false)}
+                  >
+                    <span>Sign up</span>
+                    <svg
+                      className="w-3 h-3 fill-current text-gray-400 shrink-0 ml-2 -mr-1"
+                      viewBox="0 0 12 12"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M11.707 5.293L7 .586 5.586 2l3 3H0v2h8.586l-3 3L7 11.414l4.707-4.707a1 1 0 000-1.414z"
+                        fill="#999"
+                        fillRule="nonzero"
+                      />
+                    </svg>
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="flex flex-col space-y-2">
+                {user.role === 'expert' && (
+                  <Button
+                    href={`/dashboard/?id=${user._id}`}
+                    as={Link}
+                    color="transparent"
+                    className="flex items-center text-gray-600 bg-slate-300 hover:bg-slate-400 px-4 py-2 rounded-md transition duration-150 ease-in-out"
+                  >
+                    <svg
+                      className="w-4 h-4 mr-2"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8v4l3 3m-6 0l-3-3V8m6 8H4a2 2 0 00-2 2v2h20v-2a2 2 0 00-2-2h-6z"
+                      />
+                    </svg>
+                    Dashboard
+                  </Button>
+                )}
+                <Button
+                  onClick={handleLogout} // Use handleLogout instead of logout
+                  className="flex items-center text-gray-600 hover:text-gray-900 bg-transparent hover:bg-gray-200 px-4 py-2 rounded-md transition duration-150 ease-in-out"
                 >
-                  <path
-                    d="M11.707 5.293L7 .586 5.586 2l3 3H0v2h8.586l-3 3L7 11.414l4.707-4.707a1 1 0 000-1.414z"
-                    fill="#999"
-                    fillRule="nonzero"
-                  />
-                </svg>
-              </Link>
-            </li>
+                  <svg
+                    className="w-4 h-4 mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 12H4m8 8H4m8-16H4m16 8a8 8 0 11-8-8 8 8 0 018 8z"
+                    />
+                  </svg>
+                  Log out
+                </Button>
+              </li>
+              </>
+            )}
           </ul>
         </Transition>
       </div>
