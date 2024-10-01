@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUser } from '@/app/context/user';
+import toast from 'react-hot-toast';
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -22,10 +23,12 @@ export default function SignUp() {
         localStorage.setItem('token', token);
         setUser(user);
         console.log(user);
+        toast.success('Logged in successfully');
         router.push('/');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'An error occurred');
+      toast.error(err.response?.data?.message || 'An error occurred');
     }
   };
 
@@ -52,7 +55,6 @@ export default function SignUp() {
                   <input id="password" type="password" className="form-input w-full text-gray-800" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 </div>
               </div>
-              {error && <div className="text-red-600 text-center mb-4">{error}</div>}
               <div className="flex flex-wrap -mx-3 mt-6">
                 <div className="w-full px-3">
                   <button type="submit" className="btn text-white bg-blue-600 hover:bg-blue-700 w-full">Login</button>

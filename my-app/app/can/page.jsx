@@ -7,6 +7,7 @@ import { useUser } from '@/app/context/user'
 import FeedbackForm from '@/components/feedback-form/page'
 import animationDataload from '@/components/lottie/loading.json'
 import Lottie from 'lottie-react'
+import { toast } from 'react-hot-toast'
 
 export default function Page() {
   const searchParams = useSearchParams()
@@ -113,11 +114,14 @@ export default function Page() {
         setResponseMessage('Submission successful')
         setMeetLink(result.interview.HostLink)
         setShowMeetLink(true)
+        toast.success('Form submitted successfully! Meet link is ready.')
       } else {
         setResponseMessage(result.error || 'Submission failed')
+        toast.error(result.error || 'Submission failed. Please try again.')
       }
     } catch (error) {
       setResponseMessage('An error occurred while submitting the form.')
+      toast.error('An error occurred. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
@@ -247,7 +251,7 @@ export default function Page() {
                     <path
                       className='opacity-75'
                       fill='currentColor'
-                      d='M4 12a8 8 0 1116 0A8 8 0 014 12z'
+                      d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.964 7.964 0 014 12H0c0 4.418 3.582 8 8 8v-4.709z'
                     ></path>
                   </svg>
                   Submitting...
@@ -257,32 +261,8 @@ export default function Page() {
               )}
             </button>
           </div>
-
-          {responseMessage && (
-            <div className='text-center mt-4'>
-              <p
-                className={`text-lg ${responseMessage.includes('error')
-                    ? 'text-red-600'
-                    : 'text-green-600'
-                  }`}
-              >
-                {responseMessage}
-              </p>
-            </div>
-          )}
-
-          <div className='text-sm text-gray-500 text-center mt-3'>
-            By submitting, you agree to the{' '}
-            <a className='underline' href='#0'>
-              terms & conditions
-            </a>
-            , and our{' '}
-            <a className='underline' href='#0'>
-              privacy policy
-            </a>
-            .
-          </div>
         </form>
+
         {showmeetlink && (
           <Button
             as={Link}

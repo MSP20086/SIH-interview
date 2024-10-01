@@ -369,6 +369,7 @@ export default function PastTableComponent({ userId }) {
       topContentPlacement='outside'
       onSelectionChange={setSelectedKeys}
       onSortChange={setSortDescriptor}
+      className='opacity-95'
     >
       <TableHeader columns={headerColumns}>
         {(column) => (

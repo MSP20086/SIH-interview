@@ -33,8 +33,11 @@
     "lottie-react": "^2.4.0",
     "mongodb": "^6.8.0",
     "next": "14.1.4",
+    "next-nprogress-bar": "^2.3.13",
+    "nextjs-progressbar": "^0.0.16",
     "react": "^18",
     "react-dom": "^18",
+    "react-hot-toast": "^2.4.1",
     "sharp": "^0.33.5",
     "SIH-interview": "file:"
   },

@@ -4,7 +4,8 @@ import "./css/style.css";
 import { Inter } from "next/font/google";
 import { UserProvider, useUser } from "@/app/context/user";
 import Header from "@/components/ui/header";
-import Banner from "@/components/banner";
+import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
+import { Toaster } from 'react-hot-toast'; // Import Toaster for toast notifications
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -21,9 +22,21 @@ export default function RootLayout({ children }) {
         <body
           className={`${inter.variable} font-inter antialiased bg-white text-gray-900 tracking-tight`}
         >
+
+            <ProgressBar
+              height="3px"
+              color="#30B8E2"
+              options={{ showSpinner: false }}
+              shallowRouting
+            />
           <div className="flex flex-col min-h-screen overflow-hidden supports-[overflow:clip]:overflow-clip">
             <Header />
             <ContentWrapper>
+
+              <Toaster 
+                position="top-center"
+                reverseOrder={false}
+              />
               {children}
             </ContentWrapper>
           </div>
@@ -37,6 +50,7 @@ function ContentWrapper({ children }) {
   const { user } = useUser();
   const router = useRouter();
   const pathname = router.pathname || '';
+
   if (user) {
     console.log(user.role)
   }

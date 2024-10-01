@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Textarea } from '@nextui-org/react'
+import { useRouter } from 'next/navigation'
 
 export default function FeedbackForm() {
   const [rating, setRating] = useState(0)
@@ -13,6 +14,7 @@ export default function FeedbackForm() {
   const [questionsFeedback, setQuestionsFeedback] = useState('')
   const [improvements, setImprovements] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const router = useRouter()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -32,6 +34,7 @@ export default function FeedbackForm() {
     // console logging for now
     console.log(feedbackData)
     setIsSubmitting(false)
+    router.push('/')
   }
 
   return (

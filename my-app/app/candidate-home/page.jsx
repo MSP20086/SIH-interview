@@ -4,6 +4,10 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/app/context/user';
 import Link from 'next/link';
+import animationDataload from '@/components/lottie/loading.json'
+import Lottie from 'lottie-react'
+import { Button } from '@nextui-org/react';
+import toast from 'react-hot-toast';
 
 export default function EnterInterviewID() {
     const [interviewID, setInterviewID] = useState('');
@@ -25,7 +29,9 @@ export default function EnterInterviewID() {
         }
 
         setHasAccess(true);
-        setLoadingUser(false);
+        setTimeout(() => {
+            setLoadingUser(false)
+          }, 3000)
     }, [user, router]);
 
     const handleSubmit = async (e) => {
@@ -33,6 +39,7 @@ export default function EnterInterviewID() {
 
         if (!interviewID || !user?.email) {
             setError('Interview ID, authentication token, and user email are required');
+            toast.error('Interview ID, authentication token, and user email are required');
             return;
         }
 
@@ -50,9 +57,11 @@ export default function EnterInterviewID() {
             const data = await response.json();
 
             if (response.ok) {
+                toast.success('Interview ID validated successfully');
                 router.push(`/can/?id=${interviewID}`);
             } else {
                 setError(data.error || 'Failed to validate Interview ID or user');
+                toast.error(data.error || 'Failed to validate Interview ID or user');
             }
         } catch (error) {
             setError('An error occurred while checking the interview');
@@ -64,9 +73,12 @@ export default function EnterInterviewID() {
     if (loadingUser) {
         return (
             <section className="bg-gradient-to-b from-gray-100 to-white h-screen flex items-center justify-center">
-                <div className="flex items-center">
-                    <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent border-solid rounded-full animate-spin"></div>
-                    <p className="ml-4 text-gray-800">Loading user data...</p>
+                <div className="flex flex-col items-center justify-center space-y-4">
+                <Lottie
+                    animationData={animationDataload}
+                    style={{ height: '150px', width: '150px' }}
+                />
+                <p className="text-gray-800">Loading...</p>
                 </div>
             </section>
         );
@@ -97,16 +109,15 @@ export default function EnterInterviewID() {
                                     />
                                 </div>
                             </div>
-                            {error && <div className="text-red-600 text-center mb-4">{error}</div>}
                             <div className="flex flex-wrap -mx-3 mt-6">
                                 <div className="w-full px-3">
-                                    <button
+                                    <Button
                                         type="submit"
                                         className="btn text-white bg-blue-600 hover:bg-blue-700 w-full"
                                         disabled={loading}
                                     >
                                         {loading ? 'Checking...' : 'Submit'}
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                         </form>

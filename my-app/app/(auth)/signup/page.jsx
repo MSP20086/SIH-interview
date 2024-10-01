@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUser } from '@/app/context/user';
+import toast from 'react-hot-toast';
 
 export default function SignUp() {
   const [name, setName] = useState('');
@@ -29,11 +30,13 @@ export default function SignUp() {
         const { token, user } = response.data;
         localStorage.setItem('token', token);
         setUser(user);
+        toast.success('Account created successfully');
         router.push('/');
       }
 
     } catch (err) {
       setError(err.response?.data?.message || 'An error occurred');
+      toast.error('An error occurred');
     }
   };
 

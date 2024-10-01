@@ -11,6 +11,7 @@ import {
 } from '@nextui-org/react'
 import emailjs from '@emailjs/browser'
 import { useSearchParams } from 'next/navigation'
+import { toast } from 'react-hot-toast' // Import toast
 
 export default function ExpertForm({ onInterviewScheduled }) {
   const SearchParams = useSearchParams()
@@ -60,9 +61,14 @@ export default function ExpertForm({ onInterviewScheduled }) {
         ...prevData,
         InterviewLink: `https://sih2024-seven.vercel.app/can?id=${result.interview._id}`,
       }))
+
+      // Show success toast
+      toast.success('Interview scheduled successfully!')
       return result.interview._id
     } catch (error) {
       console.error('Failed to post data:', error)
+      // Show error toast
+      toast.error('Failed to schedule the interview')
     }
   }
 
@@ -92,16 +98,23 @@ export default function ExpertForm({ onInterviewScheduled }) {
               if (onInterviewScheduled) {
                 onInterviewScheduled()
               }
+
+              // Show success toast
+              toast.success('Email sent successfully!')
             },
             (err) => {
               console.error('FAILED...', err)
               setIsLoading(false)
+              // Show error toast
+              toast.error('Failed to send the email')
             }
           )
       }
     } catch (error) {
       console.error('Error sending email:', error)
       setIsLoading(false)
+      // Show error toast
+      toast.error('Error while scheduling and sending email')
     }
   }
 

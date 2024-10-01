@@ -345,6 +345,7 @@ export default function FutureTableComponent({ userId }) {
       onSortChange={setSortDescriptor}
       topContent={topContent}
       bottomContent={bottomContent}
+      className='opacity-95'
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
