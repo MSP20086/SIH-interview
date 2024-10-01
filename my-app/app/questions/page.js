@@ -5,6 +5,7 @@ import Table from "@/components/question-table/table";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import animationDataload from '@/components/lottie/loading.json'
+import Lottie from 'lottie-react'
 
 export default function Questions() {
   const searchParams = useSearchParams();
