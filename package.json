@@ -1,0 +1,52 @@
+{
+  "name": "SIH-interview",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@google/generative-ai": "^0.17.1",
+    "@headlessui/react": "^1.7.18",
+    "@lottiefiles/react-lottie-player": "^3.5.4",
+    "@mui/icons-material": "^6.0.1",
+    "@mui/material": "^6.0.1",
+    "@nextui-org/react": "^2.4.6",
+    "@pinata/sdk": "^2.1.0",
+    "@tailwindcss/line-clamp": "^0.4.4",
+    "aos": "^2.3.4",
+    "assert": "^2.1.0",
+    "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "date-fns": "^3.6.0",
+    "dotenv": "^16.4.5",
+    "emailjs-com": "^3.2.0",
+    "framer-motion": "^11.3.30",
+    "headlessui": "^0.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "lottie-react": "^2.4.0",
+    "mongodb": "^6.8.0",
+    "next": "14.1.4",
+    "next-nprogress-bar": "^2.3.13",
+    "nextjs-progressbar": "^0.0.16",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-hot-toast": "^2.4.1",
+    "selenium-webdriver": "^4.30.0",
+    "sharp": "^0.33.5",
+    "SIH-interview": "file:"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.0.1",
+    "postcss": "^8",
+    "tailwindcss": "^3.3.0"
+  }
+}
