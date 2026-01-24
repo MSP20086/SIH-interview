@@ -6,19 +6,19 @@ async function runSignUptests(){
 
     const signupDetails = [
         // Test Case 1: Successful Signup (New User)
-        ['John Doe', 'johndoe13@gmail.com', 'password123', 'Candidate', true, 'Account created successfully'],
+        ['John Doe', 'johndoe1352323@gmail.com', 'password123', 'Candidate', true, 'Account created successfully'],
       
         // Test Case 2: Email Already Exists
         ['Varun Sriram', 'varunsriram10@gmail.com', 'abcd@1234', 'Candidate', false, 'User already exists'],
       
         // Test Case 3: Weak Password
-        ['Emily Clark', 'emilyclark567@gmail.com', '123', 'Candidate', false, 'Password is too weak'],
+        ['Emily Clark', 'emilyclar352k5678@gmail.com', '123', 'Candidate', false, 'Password is too weak'],
       
         // Test Case 4: Invalid Email Format
-        ['Michael Smith', 'michael.smith@.com', 'mypass789', 'Expert', false, 'Invalid email format'],
+        ['Michael Smith', 'michael.....smith@.com', 'mypass789', 'Expert', false, 'Invalid email format'],
       
         // Test Case 5: Successful Signup (Recruiter)
-        ['Robert Williams', 'robert.williams@gmail.com', 'strongPass456', 'Expert', true, 'Account created successfully'],
+        ['Robert Williams', 'robert.williiams123@gmail.com', 'strongPass456', 'Expert', true, 'Account created successfully'],
 
       ];
       
