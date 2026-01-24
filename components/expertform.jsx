@@ -92,37 +92,37 @@ export default function ExpertForm({ onInterviewScheduled }) {
       if (interviewId) {
         emailjs
           .send(
-            'service_u84bp1n',
-            'template_0lrcsxn',
+            "service_s189bxp",
+            "template_czjdcb9",
             {
               ...formData,
               InterviewLink: `https://sih2024-seven.vercel.app/can?id=${interviewId}`,
             },
-            'ZIHQMfKI0iwengpp8'
+            "H-XJqpMeb2b1oxcSG"
           )
           .then(
             (response) => {
-              console.log('SUCCESS!', response.status, response.text)
-              setIsLoading(false)
+              console.log("SUCCESS!", response.status, response.text);
+              setIsLoading(false);
               // handleClose()
 
               // Trigger the callback to notify the parent component to refetch data
               if (onInterviewScheduled) {
-                onInterviewScheduled()
+                onInterviewScheduled();
               }
 
               // Show success toast
-              toast.success('Email sent successfully!')
-              setEmailMes('Email sent successfully!')
+              toast.success("Email sent successfully!");
+              setEmailMes("Email sent successfully!");
             },
             (err) => {
-              console.error('FAILED...', err)
-              setIsLoading(false)
+              console.error("FAILED...", err);
+              setIsLoading(false);
               // Show error toast
-              toast.error('Failed to send the email')
-              setEmailMes('Failed to send the email')
+              toast.error("Failed to send the email");
+              setEmailMes("Failed to send the email");
             }
-          )
+          );
       }
     } catch (error) {
       console.error('Error sending email:', error)

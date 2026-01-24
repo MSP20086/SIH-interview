@@ -6,19 +6,19 @@ async function runSignUptests(){
 
     const signupDetails = [
         // Test Case 1: Successful Signup (New User)
-        ['John Doe', 'johndoe13@gmail.com', 'password123', 'Candidate', true, 'Account created successfully'],
+        ['John Doe', 'johndoeeeeemc213@gmail.com', 'password123', 'Candidate', true, 'Account created successfully'],
       
         // Test Case 2: Email Already Exists
-        ['Varun Sriram', 'varunsriram10@gmail.com', 'abcd@1234', 'Candidate', false, 'User already exists'],
+        ['Anish Singh', 'anishsingh10@gmail.com', 'abcd@1234', 'Candidate', false, 'User already exists'],
       
         // Test Case 3: Weak Password
-        ['Emily Clark', 'emilyclark567@gmail.com', '123', 'Candidate', false, 'Password is too weak'],
+        ['Emily Clark', 'emilyclark4544267@gmail.com', '123', 'Candidate', false, 'Password is too weak'],
       
         // Test Case 4: Invalid Email Format
-        ['Michael Smith', 'michael.smith@.com', 'mypass789', 'Expert', false, 'Invalid email format'],
+        ['Michael Smith', 'michaeeel.smith@.com', 'mypass789', 'Expert', false, 'Invalid email format'],
       
         // Test Case 5: Successful Signup (Recruiter)
-        ['Robert Williams', 'robert.williams@gmail.com', 'strongPass456', 'Expert', true, 'Account created successfully'],
+        ['Robert Williams', 'robert12313223.williams@gmail.com', 'strongPass456', 'Expert', true, 'Account created successfully'],
 
       ];
       
@@ -70,29 +70,29 @@ async function runSignUptests(){
       }
 }
 
-// runSignUptests();
+runSignUptests();
 
 async function runInterviewSchedulingTests(){
     const driver = await new Builder().forBrowser('MicrosoftEdge').build();
 
     const TestDetails = [
       // Test 1 : Correct Details
-      ['Varun', 'varunsriram10@gmail.com', 'Data Analyst', '10-04-2025T14:30', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b36-3464d9cc8cd7', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b36-3464d9cc8cd7', 'Email sent successfully!', 'Interview scheduled successfully!' ],
+      ['Anish', 'anishsingh0904@gmail.com', 'Data Analyst', '10-04-2025T14:30', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b36-3464d9cc8cd7', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b36-3464d9cc8cd7', 'Email sent successfully!', 'Interview scheduled successfully!' ],
 
       // Test 2 : Incorrect email Id
-      ['Varun', 'varunsriram2gmail.com', 'Data Analyst', '10-04-2025T14:30', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b36-3464d9cc8cd7', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b36-3464d9cc8cd7', 'Failed to send the email', 'Failed to schedule the interview'],
+      ['Anish', 'anishsingh2gmail.com', 'Data Analyst', '10-04-2025T14:30', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b36-3464d9cc8cd7', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b36-3464d9cc8cd7', 'Failed to send the email', 'Failed to schedule the interview'],
 
       // Test 3 : Wrong Date - Past Date
-      ['Varun', 'varunsriram10@gmail.com', 'Data Analyst', '10-03-2025T14:30', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b36-3464d9cc8cd7', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b36-3464d9cc8cd7', 'Failed to send the email', 'Failed to schedule the interview'],
+      ['Anish', 'anishsingh0904@gmail.com', 'Data Analyst', '10-03-2025T14:30', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b36-3464d9cc8cd7', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b36-3464d9cc8cd7', 'Failed to send the email', 'Failed to schedule the interview'],
 
       // Test 4 : Wrong Time - Past time
-      ['Varun', 'varunsriram10@gmail.com', 'Data Analyst', '31-03-2025T14:30', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b36-3464d9cc8cd7', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b36-3464d9cc8cd7', 'Failed to send the email', 'Failed to schedule the interview'],
+      ['Anish', 'anishsingh0904@gmail.com', 'Data Analyst', '31-03-2025T14:30', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b36-3464d9cc8cd7', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b36-3464d9cc8cd7', 'Failed to send the email', 'Failed to schedule the interview'],
 
       // Test 5 : Incorrect Meet Link
-      ['Varun', 'varunsriram10@gmail.com', 'Data Analyst', '10-04-2025T14:30', 'abcd', 'abcd', 'Failed to send the email', 'Failed to schedule the interview'],
+      ['Anish', 'anishsingh0904@gmail.com', 'Data Analyst', '10-04-2025T14:30', 'abcd', 'abcd', 'Failed to send the email', 'Failed to schedule the interview'],
 
       // Test 6 : Incorrect Meet Link Id
-      ['Varun', 'varunsriram10@gmail.com', 'Data Analyst', '10-04-2025T14:30', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b-3464d9cc8cd7', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49-9b36-3464d9cc8cd7', 'Failed to send the email', 'Failed to schedule the interview'],
+      ['Anish', 'anishsingh0904@gmail.com', 'Data Analyst', '10-04-2025T14:30', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49dc-9b-3464d9cc8cd7', 'https://nexusmeetapp.vercel.app/ca8c116b-bc54-49-9b36-3464d9cc8cd7', 'Failed to send the email', 'Failed to schedule the interview'],
 
       // Test 7 : 
     ]
@@ -100,15 +100,16 @@ async function runInterviewSchedulingTests(){
 
     try{
       await driver.get('http://localhost:3000/signin');
-      await driver.findElement(By.id('email')).sendKeys('vssriram_b22@ce.vjti.ac.in');
-      await driver.findElement(By.id('password')).sendKeys('abcd@123');
+      await driver.findElement(By.id('email')).sendKeys('anishsingh0904@gmail.com');
+      await driver.findElement(By.id('password')).sendKeys('sih@123');
       await driver.findElement(By.css('button[type="submit"]')).click();
       for(let i=0;i<TestDetails.length;i++){
         const [name, email, Job_Position, DateTime, HostLink, CandidateLink, expectedEmailMessage, expectedSchedulingMessage] = TestDetails[i];
 
       
         await driver.sleep(2000);
-        await driver.get('http://localhost:3000/dashboard?id=67ea7b180a29232d0d176f29')
+        await driver.get(
+          "http://localhost:3000/dashboard?id=67f4eafc8d39f9b262a3b7db");
 
         // Opening the modal 
         await driver.sleep(5000)
@@ -166,4 +167,4 @@ async function runInterviewSchedulingTests(){
 
 }
 
-runInterviewSchedulingTests();
+// runInterviewSchedulingTests();
